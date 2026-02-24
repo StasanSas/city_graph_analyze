@@ -51,7 +51,6 @@ def get_russian_cities_population(min_population):
 
 
 async def get_english_name_with_population(n):
-    # Использование 500000
     cities = get_russian_cities_population(n)
     translator = Translator()
     cities_eng = []

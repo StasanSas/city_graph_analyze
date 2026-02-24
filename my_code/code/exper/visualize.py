@@ -1,12 +1,13 @@
+import math
 import os
-
+from pyvis.network import Network
 
 def visualize_square_html(graph,
                           lat_min, lat_max,
                           lon_min, lon_max,
                           output_file="square_graph.html",
                           include_edges=True,
-                          max_nodes=None):
+                          max_nodes=None, pyvis=None):
     """
     Визуализация всех вершин и рёбер в заданном географическом квадрате.
 
@@ -20,19 +21,20 @@ def visualize_square_html(graph,
     """
     print(f"Визуализация квадрата: lat [{lat_min:.4f}, {lat_max:.4f}], lon [{lon_min:.4f}, {lon_max:.4f}]")
 
-    from pyvis.network import Network
     import os
 
     # Собираем узлы в квадрате
-    nodes_in_square = []
+    nodes_in_square = set()
     nodes_data = []  # Будут хранить (node, lat, lon)
-
     for node in graph.nodes():
         if isinstance(node, tuple) and len(node) == 2:
             lat, lon = node
-            if lat_min <= lat <= lat_max and lon_min <= lon <= lon_max:
-                nodes_in_square.append(node)
-                nodes_data.append((node, lat, lon))
+        else:
+            lon = graph.nodes[node]["x_coord"]
+            lat = graph.nodes[node]["y_coord"]
+        if lat_min <= lat <= lat_max and lon_min <= lon <= lon_max:
+            nodes_in_square.add(node)
+            nodes_data.append((node, lat, lon))
 
     if not nodes_in_square:
         print("Нет узлов в указанном квадрате")
@@ -56,6 +58,9 @@ def visualize_square_html(graph,
     for node, lat, lon in nodes_data:
         # Преобразуем географические координаты в координаты экрана
         # В PyVis координаты идут от 0 до 1000
+        lat_center = (lat_min + lat_max) / 2
+        scale_lon = math.cos(math.radians(lat_center))
+
         x = ((lon - lon_min) / (lon_max - lon_min)) * 1000
         y = ((lat_max - lat) / (lat_max - lat_min)) * 1000  # Инвертируем Y
 
@@ -358,21 +363,7 @@ def create_square_info_html(graph, lat_min, lat_max, lon_min, lon_max,
                 <button class="tablink" onclick="openTab(event, 'Area')">Площадь области</button>
             </div>
 
-            <div id="Nodes" class="tabcontent">
-                <h3>Узлы в квадрате</h3>
-                <div class="node-list">
-                    {"<br>".join(str(node)[:50] for node in nodes_in_square[:200])}
-                    {f"<br>... и ещё {len(nodes_in_square) - 200} узлов" if len(nodes_in_square) > 200 else ""}
-                </div>
-            </div>
-
-            <div id="Edges" class="tabcontent">
-                <h3>Рёбра в квадрате</h3>
-                <div class="node-list">
-                    {"<br>".join(f"{u} → {v}" for u, v in edges_in_square[:200])}
-                    {f"<br>... и ещё {len(edges_in_square) - 200} рёбер" if len(edges_in_square) > 200 else ""}
-                </div>
-            </div>
+        
 
             <div id="Area" class="tabcontent">
                 <h3>Информация о площади</h3>
@@ -413,7 +404,7 @@ def create_square_info_html(graph, lat_min, lat_max, lon_min, lon_max,
     return "square_info.html"
 
 
-def find_and_visualize_area(graph, center_lat, center_lon, radius_km=1):
+def find_and_visualize_area(graph, center_lat, center_lon, radius_km=0.9):
     """
     Найти и визуализировать область вокруг заданной точки.
 
@@ -424,8 +415,11 @@ def find_and_visualize_area(graph, center_lat, center_lon, radius_km=1):
     """
     # Примерное преобразование: 1 градус широты ≈ 111 км
     # 1 градус долготы ≈ 111 * cos(широта) км
+    scale_lon = math.cos(math.radians(center_lon))
+
     lat_delta = radius_km / 111.32
-    lon_delta = radius_km / (111.32)
+    lon_delta = radius_km / (111.32 * scale_lon)
+
 
     lat_min = center_lat - lat_delta
     lat_max = center_lat + lat_delta
@@ -447,7 +441,7 @@ def main():
     start_ref = (55.63265, 37.65817)
     end_ref = (55.8468, 37.44116)
     mode = 'walk'
-    file = '/my_code/city_graphs/Ekaterinburg_graph.osm.pbf'
+    file = '../../city_graphs/Ekaterinburg_graph.osm.pbf'
 
     handler = OSMHandler(start_ref, end_ref, mode=mode, file=file)
     g = handler.graph.get_graph()
@@ -472,7 +466,7 @@ def main():
         graph=g,
         center_lat=56.8380,  # Центр Екатеринбурга
         center_lon=60.5973,
-        radius_km=1  # 2 км радиус
+        radius_km=0.8  # 2 км радиус
     )
 
     print("\nДля открытия визуализации:")

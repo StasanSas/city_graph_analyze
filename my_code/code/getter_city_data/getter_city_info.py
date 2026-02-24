@@ -6,7 +6,7 @@ import requests
 from shapely import Polygon, Point, LineString, GeometryCollection
 from shapely.geometry import shape, MultiPolygon
 
-from my_code.code.rusian_cityes import read_cities_file
+from my_code.code.getter_city_data.rusian_cityes import read_cities_file
 
 # Список городов с населением ≥500 000
 cities = [
@@ -104,7 +104,7 @@ def save_to_poly(geojson, filename):
 
 
 def set_in_file_polygons_of_cities(cities):
-    output_dir = "../city_polygons"
+    output_dir = "../../city_polygons"
     os.makedirs(output_dir, exist_ok=True)
 
     for city in cities:
@@ -133,7 +133,7 @@ async def run_osmium_extract_async(filename, graph_filename):
     """Асинхронный запуск osmium"""
     process = await asyncio.create_subprocess_exec(
         "osmium", "extract", "-p", filename,
-        "russia-251026.osm.pbf", "-o", graph_filename,
+        "../russia-251026.osm.pbf", "-o", graph_filename,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE
     )
@@ -174,7 +174,7 @@ def run_osmium_extract(filename, graph_filename):
 
 
 async def set_in_file_graphs_of_cities(cities):
-    output_dir = "../city_graphs"
+    output_dir = "../../city_graphs"
     os.makedirs(output_dir, exist_ok=True)
 
     #tasks = []
@@ -196,7 +196,7 @@ async def set_in_file_graphs_of_cities(cities):
             #print(f"Completed {city['name']} with code: {result}")
 
 async def main():
-    cities = read_cities_file('rusian_city.txt') #await get_english_name_with_population(100000)
+    cities = read_cities_file('../rusian_city.txt') #await get_english_name_with_population(100000)
     #set_in_file_polygons_of_cities(cities=cities)
     await set_in_file_graphs_of_cities(cities)
 

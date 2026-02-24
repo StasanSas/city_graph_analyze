@@ -1,11 +1,11 @@
 import os
 
-from my_code.code.rusian_cityes import read_cities_file
+from my_code.code.getter_city_data.rusian_cityes import read_cities_file
 from old_code.Modes.WalkMode import WalkMode
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    cities = read_cities_file('rusian_city.txt')
+    cities = read_cities_file('../rusian_city.txt')
     current_directory = 'city_graphs'
     for city in cities:
         filename = f"{city['name'].replace(' ', '_')}_graph.osm.pbf"
