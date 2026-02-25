@@ -18,7 +18,7 @@ class DataArrivalAtStop :
         return (self.id_node, self.arrival_time) == (other.id_node, other.arrival_time)
 
     def __repr__(self):
-        return f"Stop({self.id_node}->{self.arrival_time})"
+        return f" {self.id_node} | {self.arrival_time.time()} "
 
 
 class TransportRoute:
@@ -42,7 +42,7 @@ class TransportRoute:
     def init_d_datetime(self, d : dict[DataArrivalAtStop, DataArrivalAtStop]):
         node_ids = set()
         for stop_start in d.keys():
-            if stop_start.id_node not in self.my_stops:
+            if stop_start.id_node not in self.d_datetime_for_stop_by_id_stop:
                 self.d_datetime_for_stop_by_id_stop[stop_start.id_node] = [stop_start.arrival_time]
             else:
                 self.d_datetime_for_stop_by_id_stop[stop_start.id_node].append(stop_start.arrival_time)
@@ -97,7 +97,8 @@ class TransportRoutes:
 
     def get_nearest_routes_for_stop(self, currentDataStateStop : DataArrivalAtStop) -> list[DataArrivalAtStop]:
         result = []
-        for route in self.d_rote_by_node[currentDataStateStop.id_node]:
+        for route_id in self.d_rote_by_node[currentDataStateStop.id_node]:
+            route = self.d_route_by_rote_id[route_id]
             nearest_arrival_for_current_route = route.get_nearest_datetime_for_stop(currentDataStateStop)
             if nearest_arrival_for_current_route is None:
                 continue
@@ -114,29 +115,50 @@ class TransportRoutes:
 
 if __name__ == "__main__":
     d_1 = {}
-    e_start_1 = DataArrivalAtStop(1, datetime(2025, 12, 31, 23, 24, 0, tzinfo=timezone.utc))
-    e_1_2 = DataArrivalAtStop(2, datetime(2025, 12, 31, 23, 25, 0, tzinfo=timezone.utc))
-    d_1[e_start_1] = e_1_2
+    s_1__24_00 = DataArrivalAtStop(1, datetime(2025, 12, 31, 23, 24, 0, tzinfo=timezone.utc))
+    s_2__25_00 = DataArrivalAtStop(2, datetime(2025, 12, 31, 23, 25, 0, tzinfo=timezone.utc))
+    d_1[s_1__24_00] = s_2__25_00
 
-    e_2_3 = DataArrivalAtStop(3, datetime(2025, 12, 31, 23, 25, 30, tzinfo=timezone.utc))
-    d_1[e_1_2] = e_2_3
+    s_3__25_30 = DataArrivalAtStop(3, datetime(2025, 12, 31, 23, 25, 30, tzinfo=timezone.utc))
+    d_1[s_2__25_00] = s_3__25_30
 
-    e_3_1 = DataArrivalAtStop(1, datetime(2025, 12, 31, 23, 27, 00, tzinfo=timezone.utc))
-    d_1[e_2_3] = e_3_1
+    s_1__27_00 = DataArrivalAtStop(1, datetime(2025, 12, 31, 23, 27, 00, tzinfo=timezone.utc))
+    d_1[s_3__25_30] = s_1__27_00
+
+    s_2__25_00_new = DataArrivalAtStop(2, datetime(2025, 12, 31, 23, 28, 0, tzinfo=timezone.utc))
+    d_1[s_1__27_00] = s_2__25_00_new
 
     d_2 = {}
-    e_2_4 = DataArrivalAtStop(4, datetime(2025, 12, 31, 23, 26, 00, tzinfo=timezone.utc))
-    d_2[e_1_2] = e_2_4
+    s_4__26_00 = DataArrivalAtStop(4, datetime(2025, 12, 31, 23, 26, 00, tzinfo=timezone.utc))
+    d_2[s_2__25_00] = s_4__26_00
 
-    e_4_5 = DataArrivalAtStop(5, datetime(2025, 12, 31, 23, 26, 30, tzinfo=timezone.utc))
-    d_2[e_2_4] = e_4_5
+    s_5__26_30 = DataArrivalAtStop(5, datetime(2025, 12, 31, 23, 26, 30, tzinfo=timezone.utc))
+    d_2[s_4__26_00] = s_5__26_30
 
-    e_5_2 = DataArrivalAtStop(2, datetime(2025, 12, 31, 23, 28, 00, tzinfo=timezone.utc))
-    d_2[e_4_5] = e_5_2
+    s_2__28_00 = DataArrivalAtStop(2, datetime(2025, 12, 31, 23, 28, 00, tzinfo=timezone.utc))
+    d_2[s_2__28_00] = s_2__28_00
+
+    s_4__26_00 = DataArrivalAtStop(4, datetime(2025, 12, 31, 23, 29, 00, tzinfo=timezone.utc))
+    d_1[s_1__27_00] = s_4__26_00
     
     route_1 = TransportRoute(1, d_1)
     route_2 = TransportRoute(2, d_2)
     
     routes = TransportRoutes([route_1, route_2])
+
+    print(routes.is_stop(10))
+    print(routes.is_stop(1))
+    print(routes.is_stop(1))
+    print(routes.get_nearest_routes_for_stop(
+        DataArrivalAtStop(2, datetime(2025, 12, 31, 23, 26, 0, tzinfo=timezone.utc)))
+    )
+
+    print(routes.get_nearest_routes_for_stop(
+        DataArrivalAtStop(1, datetime(2025, 12, 31, 23, 23, 0, tzinfo=timezone.utc)))
+    )
+
+    print(routes.get_nearest_routes_for_stop(
+        DataArrivalAtStop(1, datetime(2025, 12, 31, 23, 25, 0, tzinfo=timezone.utc)))
+    )
     
     
