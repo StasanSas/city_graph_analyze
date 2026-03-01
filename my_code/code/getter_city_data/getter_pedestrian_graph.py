@@ -67,8 +67,8 @@ def save_clear_graph(input_dir, output_dir, file):
     )
 
 
-def save_clear_files():
-    output_dir = "../../city_clear_graph"
+def save_pedestrian_files():
+    output_dir = "../../city_pedestrian_graph"
     os.makedirs(output_dir, exist_ok=True)
 
     input_dir = "../../city_graphs"
@@ -79,7 +79,7 @@ def save_clear_files():
 
 
 if __name__ == "__main__":
-    # save_clear_files()
-    output_dir = "../../city_clear_graph"
+    # save_pedestrian_files()
+    output_dir = "../../city_pedestrian_graph"
     input_dir = "../../city_graphs"
     save_clear_graph(input_dir, output_dir, 'Kostroma_graph.osm.pbf')
