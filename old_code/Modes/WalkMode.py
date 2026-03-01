@@ -7,3 +7,4 @@ class WalkMode(DefaultMode):
         self.tags = [('highway', 'footway'), ('footway', 'crossing'), ('highway', 'pedestrian'),
                               ('highway', 'living_street'), ('footway', 'sidewalk'), ('highway', 'service'),
                               ('highway', 'steps'), ('highway', 'corridor'), ('highway', 'path')]
+        #highway	residential
