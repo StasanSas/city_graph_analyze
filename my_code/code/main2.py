@@ -52,16 +52,16 @@ path_input = "Kostroma.graphml"
 path_output = "one_component/Kostroma.graphml"
 cleaner = CleanerConnectedComponents()
 
-#cleaner.run(path_input, path_output)
+cleaner.run(path_input, path_output)
 
-#graph = nx.read_graphml("../city_cleaned_graphs/" + path_output)
-graph = nx.read_graphml("C:\\Users\\Acer\Desktop\\city_graph_analyze\\my_code\\city_pedestrian_graph\\Kostroma.graphml")
+graph = nx.read_graphml("../city_cleaned_graphs/" + path_output)
+#graph = nx.read_graphml("C:\\Users\\stanislav.ivanov\\Desktop\\city_graph_analyze\\my_code\\city_pedestrian_graph\\Kostroma.graphml")
 
 area_file = find_and_visualize_area(
         graph=graph,
         center_lat=57.7665,
         center_lon=40.9269,
-        radius_km=2
+        radius_km=4
     )
 print(3)
 

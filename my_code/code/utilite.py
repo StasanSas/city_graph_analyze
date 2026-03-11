@@ -1,6 +1,8 @@
 import math
 import os
 
+import networkx as nx
+
 from old_code.Modes.DefaultMode import DefaultMode
 from old_code.Modes.PublicTransportMode import PublicTransportMode
 from old_code.Modes.ScooterMode import ScooterMode
@@ -76,6 +78,32 @@ def haversine(point_a, point_b):
     distance = R * c
     return distance * 1000
 
+def read_graphml(part_path : str) -> nx.Graph:
+    path = os.path.join("../city_pedestrian_graph", part_path)
+    print(os.path.abspath(path))
+    if os.path.exists(path):
+        return nx.read_graphml(path)
+    else:
+        path = os.path.join("../city_cleaned_graphs", part_path)
+        return nx.read_graphml(path)
+
+
+def write_graphml(graph : nx.Graph, part_path : str) -> None:
+    base_path = "../city_cleaned_graphs"
+    parts_path = part_path.split("/")
+    if len(parts_path) != 2:
+        raise Exception("Дай папку")
+    if not os.path.isdir(os.path.join(base_path, parts_path[0])):
+        raise Exception("Нет такой папки")
+    path = os.path.join(base_path, part_path)
+    nx.write_graphml(
+        graph,
+        path,
+        encoding="utf-8",
+        prettyprint=True
+    )
+
 # Использование
-output_dir = "../city_polygons"
-delete_empty_files(output_dir)
+#output_dir = "../city_polygons"
+#delete_empty_files(output_dir)
+
