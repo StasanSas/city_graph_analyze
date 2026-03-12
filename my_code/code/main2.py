@@ -59,9 +59,9 @@ graph = nx.read_graphml("../city_cleaned_graphs/" + path_output)
 
 area_file = find_and_visualize_area(
         graph=graph,
-        center_lat=57.7665,
-        center_lon=40.9269,
-        radius_km=4
+        center_lat=57.801614922535215,
+        center_lon=40.953651884507025,
+        radius_km=30
     )
 print(3)
 

@@ -6,10 +6,10 @@ from old_code.Handler import OSMHandler
 import matplotlib.pyplot as plt
 
 def main():
-    g = read_graphml('Kostroma.graphml')
+    g = read_graphml('one_component__and__without_2_chains/Kostroma.graphml')
     a = g.edges(data=True)
     edge_lengths = [data['weight'] for u, v, data in g.edges(data=True)
-                    if data['weight'] <= 160]
+                    if data['weight'] <= 200]
     print(np.mean(edge_lengths))
     print(np.median(edge_lengths))
     plt.figure(figsize=(10, 6))
@@ -17,7 +17,7 @@ def main():
 
     # Явно задаём деления на осях
     x_ticks = range(0, 161, 5)  # От 0 до 160 с шагом 10
-    y_ticks = range(0, 3001, 200)  # От 0 до 1000 с шагом 100 (подбери под свои данные)
+    y_ticks = range(0, 1001, 100)  # От 0 до 1000 с шагом 100 (подбери под свои данные)
 
     plt.xticks(x_ticks, rotation=45)  # rotation для наклона, если нужно
     plt.yticks(y_ticks)

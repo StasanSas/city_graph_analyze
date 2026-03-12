@@ -1,5 +1,6 @@
 import networkit as nk
 
+from my_code.code.algos.coorsinates_helper.center import get_center
 from my_code.code.algos.h3_helper.h3_index import H3Index
 from my_code.code.cleaning.abstract_cleaner import CleanerGraph
 
@@ -25,13 +26,17 @@ class CleanerConnectedComponents(CleanerGraph):
         statistic = list(map(len, components))
         print(statistic)
 
+        #r = []
+        #for c in components[1:]:
+            #r += c
+
         # Находим наибольшую компоненту
-        largest_component_nodes = max(components, key=len)
+        #largest_component_nodes = max(components, key=len)
 
         # Создаём подграф с компактными индексами (с нуля)
         new_graph = nk.graphtools.subgraphFromNodes(
             graph,
-            list(largest_component_nodes),
+            list(components[0]),
         )
 
         return new_graph
