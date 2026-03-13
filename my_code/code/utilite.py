@@ -1,7 +1,10 @@
 import math
 import os
+import time
 
 import networkx as nx
+import requests
+from bs4 import BeautifulSoup
 
 from old_code.Modes.DefaultMode import DefaultMode
 from old_code.Modes.PublicTransportMode import PublicTransportMode
@@ -102,8 +105,28 @@ def write_graphml(graph : nx.Graph, part_path : str) -> None:
         encoding="utf-8",
         prettyprint=True
     )
-
 # Использование
 #output_dir = "../city_polygons"
 #delete_empty_files(output_dir)
+
+def get_slow_query(url, t):
+    time.sleep(t)
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        return soup
+    else:
+        print(f"Ошибка: {url} - {response.status_code}")
+
+def get_dictionary_abbreviations_city():
+    path = "dictionary_abbreviations.txt"
+    d = {}
+    with open(path, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+        for l in lines:
+            l = l.replace('\n', '')
+            s, b = l.split(' ', 1)
+            d[b] = s.lower()
+    print(d)
+#get_dictionary_abbreviations_city()
 

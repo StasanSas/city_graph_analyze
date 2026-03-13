@@ -3,6 +3,9 @@
 import requests
 from bs4 import BeautifulSoup
 
+from my_code.code.utilite import get_slow_query
+
+
 def get_all_routes_bus():
     url = "https://kudikina.ru/ekb/bus/"
     response = requests.get(url)
@@ -20,14 +23,7 @@ def get_all_routes_bus():
     else:
         print(f"Ошибка: {response.status_code}")
 
-def get_slow_query(url, t):
-    time.sleep(t)
-    response = requests.get(url)
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.content, 'html.parser')
-        return soup
-    else:
-        print(f"Ошибка: {url} - {response.status_code}")
+
 
 
 def get_all_stops_bus(routes_bus_list_name):
