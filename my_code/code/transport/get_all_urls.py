@@ -1,5 +1,6 @@
-﻿import os
-
+﻿import asyncio
+import os
+from googletrans import Translator
 from my_code.code.utilite import get_slow_query
 
 base_url = 'https://kudikina.ru'
@@ -34,7 +35,7 @@ def read_city_from_file():
     with open(path, 'r', encoding='utf-8') as f:
         for line in f:
             city, url = line.split('\t')
-            d[city] = url
+            d[city] = url[:-1]
     return d
 
 def write_city_from_file(d):
@@ -48,4 +49,33 @@ def get_cash_city():
         write_city_from_file(d)
     return read_city_from_file()
 
-print(get_cash_city())
+
+async def get_d_by_rus_get_english():
+    city_url = get_cash_city()
+    d = {}
+    translator = Translator()
+    for city, url in city_url.items():
+        result = await translator.translate('город ' + city, src='ru', dest='en')
+        en_city = result.text.replace('city', '').replace('of', '').replace('​​ ', '').strip()
+        d[city] = en_city
+        print(en_city)
+    return d
+
+def get_cash_city_en_by_ru():
+    path = '../city_en_by_ru.txt'
+    if not os.path.exists(path):
+        d = asyncio.run(get_d_by_rus_get_english())
+        with open(path, 'w', encoding='utf-8') as f:
+            for city_ru, city_en in d.items():
+                f.write(f'{city_ru}\t{city_en}\n')
+        return d
+    else:
+        d = {}
+        with open(path, 'r', encoding='utf-8') as f:
+            for line in f:
+                city_ru, city_en = line.split('\t')
+                d[city_ru] = city_en[:-1]
+        return d
+
+
+print(get_cash_city_en_by_ru())
