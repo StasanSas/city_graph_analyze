@@ -4,6 +4,7 @@ import osmium
 import networkx as nx
 
 from my_code.code.algos.transport_routes import TransportRoute, DataArrival, TransportRoutes
+from my_code.code.transport.get_all_names_route_and_ref import get_all_names_route_and_ref
 from my_code.code.utilite import get_slow_query
 import osmium
 
@@ -85,8 +86,7 @@ class Route:
         self.data_stop = [] # [(Stop, [time])]
         self.all_coords = [] # [(lat, lon)]
 
-def get_all_names_route_and_ref(url) -> list[tuple[str, str]]:
-    pass
+
 
 def get_stops_with_coordinates(base_url, ref) -> list:
     pass
@@ -109,10 +109,10 @@ def get_nearest_points(file, stops) -> dict[str, int]:
 def get_model_route(i, name, d_id : dict[str, int], route : dict[tuple[str, datetime], tuple[str, datetime]]) -> TransportRoute:
     pass
 
-def get_all_routes_with_coordinates_and_time(url, file):
+def get_all_routes_with_coordinates_and_time(url, file, name):
     d_stop = {} # name_stop : Stop
     d_routes = {} # name_routes : Route
-    names_and_ref = get_all_names_route_and_ref(url)
+    names_and_ref = get_all_names_route_and_ref(url, name)
     for name, ref in names_and_ref:
         coordinates_data = get_stops_with_coordinates(url, ref)
         d_stop = d_with_new_stops(d_stop, coordinates_data)

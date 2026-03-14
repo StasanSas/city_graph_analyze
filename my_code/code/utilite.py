@@ -116,7 +116,21 @@ def get_slow_query(url, t):
         soup = BeautifulSoup(response.content, 'html.parser')
         return soup
     else:
-        print(f"Ошибка: {url} - {response.status_code}")
+        raise Exception(f"Ошибка: {url} - {response.status_code}")
+
+def read_city_from_file(path):
+    d = {}
+    with open(path, 'r', encoding='utf-8') as f:
+        for line in f:
+            parts = line.split('\t')
+            key, value = parts[0], parts[1]
+            d[key] = value[:-1]
+    return d
+
+def write_city_from_file(path, d):
+    with open(path, 'w', encoding='utf-8') as f:
+        for key, value in d.items():
+            f.write(f'{key}\t{value}\n')
 
 def get_dictionary_abbreviations_city():
     path = "dictionary_abbreviations.txt"
