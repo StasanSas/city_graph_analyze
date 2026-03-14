@@ -29,8 +29,8 @@ def prepare_graph_for_graphml(graph: nx.Graph) -> nx.Graph:
 
         new_graph.add_node(
             str(i),
-            x_coord=float(lat),
-            y_coord=float(lon),
+            x_coord=float(lon),
+            y_coord=float(lat),
         )
 
     # --- 2. копируем рёбра ---

@@ -26,8 +26,8 @@ def visualize_graph_on_map(graph,
         if isinstance(node, tuple) and len(node) == 2:
             lat, lon = node
         else:
-            lon = graph.nodes[node]["y_coord"]
-            lat = graph.nodes[node]["x_coord"]
+            lon = graph.nodes[node]["x_coord"]
+            lat = graph.nodes[node]["y_coord"]
 
         if lat_min <= lat <= lat_max and lon_min <= lon <= lon_max:
             nodes_in_square.append((node, lat, lon))
@@ -61,11 +61,12 @@ def visualize_graph_on_map(graph,
                     lat1, lon1 = u
                     lat2, lon2 = v
                 else:
-                    lon1 = graph.nodes[u]["y_coord"]
-                    lat1 = graph.nodes[u]["x_coord"]
 
-                    lon2 = graph.nodes[v]["y_coord"]
-                    lat2 = graph.nodes[v]["x_coord"]
+                    lon1 = graph.nodes[u]["x_coord"]
+                    lat1 = graph.nodes[u]["y_coord"]
+
+                    lon2 = graph.nodes[v]["x_coord"]
+                    lat2 = graph.nodes[v]["y_coord"]
 
                 folium.PolyLine(
                     [(lat1, lon1), (lat2, lon2)],

@@ -1,0 +1,295 @@
+Апатиты	Apatity
+Артем	Artem
+Балаково	Balakovo
+Барнаул	Barnaul
+Бердск	Berdsk
+Боровичи	Borovichi
+Братск	Bratsk
+Брянск	Bryansk
+Великий Новгород	Veliky Novgorod
+Владивосток	Vladivostok
+Владимир	Vladimir
+Волжск	Volzhsk
+Вологда	Vologda
+Воркута	Vorkuta
+Воронеж	Voronezh
+Грязи	Mud
+Димитровград	Dimitrovgrad
+Донецк	Donetsk
+Елец	Yelets
+Иваново	Ivanovo
+Ижевск	Izhevsk
+Иркутск	Irkutsk
+Искитим	Iskitim
+Йошкар-Ола	Yoshkar-Ola
+Калуга	Kaluga
+Киров	Kirov
+Ковров	Kovrov
+Комсомольск-на-Амуре	Komsomolsk-on-Amur
+Конаково	Konakovo
+Кострома	Kostroma
+Курск	Kursk
+Липецк	Lipetsk
+Майкоп	Maykop
+Махачкала	Makhachkala
+Можга	Mozhga
+Мурманск	Murmansk
+Мценск	Mtsensk
+Находка	Nakhodka
+Новосибирск	Novosibirsk
+Новочебоксарск	Novocheboksarsk
+Новый Уренгой	Novy Urengoy
+Ноябрьск	Noyabrsk
+Обнинск	Obninsk
+Омск	Omsk
+Орёл	Orel
+Оренбург	Orenburg
+Пенза	Penza
+Петрозаводск	Petrozavodsk
+Псков	Pskov
+Россошь	Rossosh
+Рыбинск	Rybinsk
+Рязань	Ryazan
+Салехард	Salekhard
+Саранск	Saransk
+Саратов	Saratov
+Североморск	Severomorsk
+Смоленск	Smolensk
+Сокол	Falcon
+Сыктывкар	Syktyvkar
+Томск	Tomsk
+Тутаев	Tutaev
+Ульяновск	Ulyanovsk
+Хабаровск	Khabarovsk
+Ханты-Мансийск	Khanty-Mansiysk
+Чебоксары	Cheboksary
+Череповец	Cherepovets
+Энгельс	Engels
+Южно-Сахалинск	Yuzhno-Sakhalinsk
+Ярославль	Yaroslavl
+Ярцево	Yartsevo
+Архангельск	Arkhangelsk
+Котлас	Kotlas
+Новодвинск	Novodvinsk
+Северодвинск	Severodvinsk
+Бирск	Birsk
+Стерлитамак	Sterlitamak
+Уфа	Ufa
+Белгород	Belgorod
+Губкин	Gubkin
+Старый Оскол	Stary Oskol
+Шебекино	Shebekino
+Волгоград	Volgograd
+Волжский	Volzhsky
+Дубовка	Dubovka
+Камышин	Kamyshin
+Краснослободск	Krasnoslobodsk
+Новоаннинский	Novoanninsky
+Урюпинск	Uryupinsk
+Фролово	Frolovo
+Фроловский	Frolovsky
+Калининград	Kaliningrad
+Озерск	Ozersk
+Черняховск	Chernyakhovsk
+Анжеро-Судженск	Anzhero-Sudzhensk
+Белово	Belovo
+Березовский	Berezovsky
+Гурьевск	Guryevsk
+Ижморский	Izhmorsky
+Кемерово	Kemerovo
+Киселёвск	Kiselevsk
+Киселевск	Kiselevsk
+Крапивинский	Krapivinsky
+Ленинск-Кузнецкий	Leninsk-Kuznetsky
+Мариинск	Mariinsk
+Междуреченск	Mezhdurechensk
+Мыски	Myski
+Новокузнецк	Novokuznetsk
+Осинники	Osinniki
+Прокопьевск	Prokopyevsk
+Промышленновский	Promyshlennovsky
+Тайга	Taiga
+Таштагол	Tashtagol
+Тисульский	Tisulsky
+Топки	Fireboxes
+Тяжинский	Tyazhinsky
+Юрга	Yurga
+Яшкинский	Yashkinsky
+Анапа	Anapa
+Краснодар	Krasnodar
+Новороссийск	Novorossiysk
+Сочи	Sochi
+Тимашевск	Timashevsk
+Туапсе	Tuapse
+Ачинск	Achinsk
+Железногорск	Zheleznogorsk
+Красноярск	Krasnoyarsk
+Курагино	Kuragino
+Уяр	Uyar
+Алушта	Alushta
+Бахчисарай	Bakhchisarai
+Гаспра	Gaspra
+Гвардейское	Gvardeiskoe
+Джанкой	Dzhankoy
+Евпатория	Evpatoria
+Керчь	Kerch
+Приморский	Primorsky
+Саки	Saki
+Севастополь	Sevastopol
+Симферополь	Simferopol
+Судак	Sudak
+Феодосия	Feodosia
+Ялта	Yalta
+Гатчина	Gatchina
+Сертолово	Sertolovo
+Сосновый Бор	Sosnovy Bor
+Тосно	Tosno
+Балашиха	Balashikha
+Барыбино	Barybino
+Бронницы	Bronnitsy
+Верея	Vereya
+Видное	Vidnoe
+Волоколамск	Volokolamsk
+Воскресенск	Voskresensk
+Дзержинский	Dzerzhinsky
+Дмитров	Dmitrov
+Дмитровский Погост	Dmitrovsky Pogost
+Долгопрудный	Dolgoprudny
+Домодедово	Domodedovo
+Дубна	Dubna
+Егорьевск	Yegoryevsk
+Жуковский	Zhukovsky
+Звенигород	Zvenigorod
+Ивантеевка	Ivanteevka
+Истра	Istra
+Кашира	Kashira
+Клин	Klin
+Коломна	Kolomna
+Королев	Korolev
+Королёв	Korolev
+Красногорск	Krasnogorsk
+Куровское	Kurovskoe
+Лобня	Lobnya
+Лосино-Петровский	Losino-Petrovsky
+Луховицы	Lukhovitsy
+Лыткарино	Lytkarino
+Люберцы	Lyubertsy
+Малино	Malino
+Можайск	Mozhaisk
+Мытищи	Mytishchi
+Наро-Фоминск	Naro-Fominsk
+Ногинск	Noginsk
+Одинцово	Odintsovo
+Озёры	Ozyory
+Орехово-Зуево	Orekhovo-Zuevo
+Павловский Посад	Pavlovsky Posad
+Подольск	Podolsk
+Пушкино	Pushkino
+Раменское	Ramenskoye
+Реутов	Reutov
+Рошаль	Roshal
+Руза	Ruza
+Сергиев Посад	Sergiev Posad
+Серебряные пруды	Silver Ponds
+Серпухов	Serpukhov
+Солнечногорск	Solnechnogorsk
+Ступино	Stupino
+Талдом	Taldom
+Фрязино	Fryazino
+Фряново	Fryanovo
+Химки	Khimki
+Черноголовка	Chernogolovka
+Чехов	Chekhov
+Шатура	Shatura
+Шаховская	Shakhovskaya
+Щёлково	Shchelkovo
+Электросталь	Elektrostal
+Арзамас	Arzamas
+Балахна	Balakhna
+Богородск	Bogorodsk
+Бор	Bor
+Выкса	Vyksa
+Городец	Gorodets
+Дзержинск	Dzerzhinsk
+Заволжье	Zavolzhye
+Кстово	Kstovo
+Нижний Новгород	Nizhny Novgorod
+Саров	Sarov
+Березники	Berezniki
+Краснокамск	Krasnokamsk
+Пермь	Perm
+Чусовой	Chusovoy
+Волгодонск	Volgodonsk
+Новочеркасск	Novocherkassk
+Новошахтинск	Novoshakhtinsk
+Ростов-на-Дону	Rostov-on-Don
+Таганрог	Taganrog
+Шахты	Mines
+Жигулевск	Zhigulevsk
+Самара	Samara
+Сызрань	Syzran
+Тольятти	Tolyatti
+Чапаевск	Chapaevsk
+Асбест	Asbestos
+Верхняя Пышма	Verkhnyaya Pyshma
+Екатеринбург	Ekaterinburg
+Ирбит	Irbit
+Каменск-Уральский	Kamensk-Uralsky
+Красноуфимск	Krasnoufimsk
+Нижний Тагил	Nizhny Tagil
+Новоуральск	Novouralsk
+Первоуральск	Pervouralsk
+Полевской	Polevskoy
+Ревда	Revda
+Ессентуки	Essentuki
+Кисловодск	Kislovodsk
+Невинномысск	Nevinnomyssk
+Пятигорск	Pyatigorsk
+Ставрополь	Stavropol
+Альметьевск	Almetyevsk
+Елабуга	Yelabuga
+Зеленодольск	Zelenodolsk
+Казань	Kazan
+Набережные Челны	Naberezhnye Chelny
+Нижнекамск	Nizhnekamsk
+Чистополь	Chistopol
+Алексин	Aleksin
+Донской	Donskoy
+Ефремов	Efremov
+Новомосковск	Novomoskovsk
+Тула	Tula
+Узловая	Uzlovaya
+Щекино	Shchekino
+Абатский район	Abatsky district
+Армизонский район	Armizonsky district
+Аромашевский район	Aromashevsky district
+Бердюжский район	Berdyuzhsky district
+Вагайский район	Vagai district
+Викуловский район	Vikulovsky district
+Голышмановский район	Golyshmanovsky district
+Заводоуковск	Zavodoukovsk
+Заводоуковский район	Zavodoukovsky district
+Исетский район	Isetsky district
+Ишим	Ishim
+Ишимский район	Ishimsky district
+Казанский район	Kazansky district
+Нижнетавдинский район	Nizhnetavdinsky district
+Омутинский район	Omutinsky district
+Сладковский район	Sladkovsky district
+Сорокинский район	Sorokinsky district
+Тобольск	Tobolsk
+Тобольский район	Tobolsk district
+Тюменский район	Tyumen district
+Тюмень	Tyumen
+Уватский район	Uvat district
+Упоровский район	Uporovsky district
+Юргинский район	Yurginsky district
+Ялуторовск	Yalutorovsk
+Ялуторовский район	Yalutorovsky district
+Ярковский район	Yarkovsky district
+Златоуст	Zlatoust
+Копейск	Kopeysk
+Магнитогорск	Magnitogorsk
+Челябинск	Chelyabinsk
+Москва	Moscow
+Санкт-Петербург	Saint Petersburg

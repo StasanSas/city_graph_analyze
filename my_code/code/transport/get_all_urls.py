@@ -28,7 +28,7 @@ def get_city_and_city_url():
     d['Санкт-Петербург'] = 'https://kudikina.ru/spb/'
     return d
 
-path = '../city_transport_urls.txt'
+path = 'city_transport_urls.txt'
 
 def read_city_from_file():
     d = {}
@@ -55,14 +55,14 @@ async def get_d_by_rus_get_english():
     d = {}
     translator = Translator()
     for city, url in city_url.items():
-        result = await translator.translate('город ' + city, src='ru', dest='en')
-        en_city = result.text.replace('city', '').replace('of', '').replace('​​ ', '').strip()
+        result = await translator.translate("city " + city, src='ru', dest='en')
+        en_city = result.text.replace('city', '').replace('of', '').replace('​​', '').strip()
         d[city] = en_city
         print(en_city)
     return d
 
 def get_cash_city_en_by_ru():
-    path = '../city_en_by_ru.txt'
+    path = 'city_en_by_ru.txt'
     if not os.path.exists(path):
         d = asyncio.run(get_d_by_rus_get_english())
         with open(path, 'w', encoding='utf-8') as f:
@@ -77,5 +77,19 @@ def get_cash_city_en_by_ru():
                 d[city_ru] = city_en[:-1]
         return d
 
+def get_files_by_rusian_names_city():
+    d = get_cash_city_en_by_ru()
+    return {k : v.replace(' ', '_') + '_graph.osm.pbf' for k, v in d.items()}
 
-print(get_cash_city_en_by_ru())
+def city_with_graph_and_transport_urls():
+    d_file_name = get_files_by_rusian_names_city()
+    d_url_name = get_cash_city()
+    d_city_for_process = {}
+    for name, path in d_file_name.items():
+        if os.path.exists('../city_graphs/' + path) and name in d_url_name:
+            d_city_for_process[name] = (d_file_name[name], d_url_name[name])
+    return d_city_for_process
+
+
+
+
