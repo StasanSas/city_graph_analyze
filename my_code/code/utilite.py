@@ -1,17 +1,33 @@
 import math
 import os
+import random
 import time
 
-import networkx as nx
 import requests
+from selenium.webdriver.common.by import By
+
+import networkx as nx
 from bs4 import BeautifulSoup
 
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
+import time
+
+from my_code.code.transport.classes import RouteTimes, RouteCoordinates
 from old_code.Modes.DefaultMode import DefaultMode
 from old_code.Modes.PublicTransportMode import PublicTransportMode
 from old_code.Modes.ScooterMode import ScooterMode
 from old_code.Modes.WalkMode import WalkMode
 
+is_init_d = False
+cash_coordinates = {} #('name_city', 'name_route') : (AnswerStop)
+cash_time = {} #('name_city', 'name_route') : (RouteTimes)
 
+driver = None
 def delete_empty_files(directory):
     """Удаляет все пустые файлы в указанной директории"""
     deleted_count = 0
@@ -109,7 +125,124 @@ def write_graphml(graph : nx.Graph, part_path : str) -> None:
 #output_dir = "../city_polygons"
 #delete_empty_files(output_dir)
 
-def get_slow_query(url, t):
+
+def get_slow_query(url, wait_time=10, max_retries=3, use_proxy=False, proxy=None):
+    """
+        Улучшенная версия с маскировкой fingerprint
+        """
+    # Список User-Agent для ротации
+    USER_AGENTS = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0",
+    ]
+
+    # Разные разрешения экрана
+    RESOLUTIONS = [(1920, 1080), (1366, 768), (1440, 900), (1536, 864)]
+
+    for attempt in range(max_retries):
+        driver = None
+        try:
+            # Случайная задержка перед запросом
+            delay = 2 + random.uniform(1, 3) * attempt
+            time.sleep(delay)
+
+            options = Options()
+            options.add_argument("--headless=new")
+            options.add_argument("--disable-gpu")
+
+            # Случайное разрешение
+            width, height = random.choice(RESOLUTIONS)
+            options.add_argument(f"--window-size={width},{height}")
+
+            # Случайный User-Agent
+            options.add_argument(f"--user-agent={random.choice(USER_AGENTS)}")
+
+            # Отключаем автоматизацию
+            options.add_argument("--disable-blink-features=AutomationControlled")
+            options.add_experimental_option("excludeSwitches", ["enable-automation"])
+            options.add_experimental_option('useAutomationExtension', False)
+
+            # Прокси если нужно
+            if use_proxy and proxy:
+                options.add_argument(f"--proxy-server={proxy}")
+
+            driver = webdriver.Chrome(options=options)
+
+            # Маскировка через CDP (самый мощный способ)
+            driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
+                "source": """
+                        // Прячем автоматизацию
+                        Object.defineProperty(navigator, 'webdriver', {
+                            get: () => undefined
+                        });
+
+                        // Добавляем плагины
+                        Object.defineProperty(navigator, 'plugins', {
+                            get: () => [1, 2, 3, 4, 5]
+                        });
+
+                        // Добавляем языки
+                        Object.defineProperty(navigator, 'languages', {
+                            get: () => ['ru-RU', 'ru', 'en-US', 'en']
+                        });
+
+                        // Эмулируем Chrome
+                        window.chrome = {
+                            runtime: {}
+                        };
+
+                        // Прячем следы автоматизации в консоли
+                        const originalQuery = window.navigator.permissions.query;
+                        window.navigator.permissions.query = (parameters) => (
+                            parameters.name === 'notifications' ?
+                                Promise.resolve({ state: Notification.permission }) :
+                                originalQuery(parameters)
+                        );
+                    """
+            })
+
+            driver.set_page_load_timeout(wait_time)
+            driver.get(url)
+
+            # Ждем загрузку
+            WebDriverWait(driver, wait_time).until(
+                EC.presence_of_element_located((By.TAG_NAME, "body"))
+            )
+
+            # Имитируем поведение человека
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight/2);")
+            time.sleep(random.uniform(0.5, 1.5))
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(random.uniform(0.5, 1.5))
+            driver.execute_script("window.scrollTo(0, 0);")
+
+            html = driver.page_source
+            soup = BeautifulSoup(html, "html.parser")
+
+            # Проверяем не капча ли
+            if "captcha" in html.lower() or "access denied" in html.lower():
+                raise Exception("Обнаружена капча или блокировка")
+
+            return soup
+
+        except Exception as e:
+            print(f"Попытка {attempt + 1} не удалась: {type(e).__name__}: {e}")
+
+            if attempt == max_retries - 1:
+                raise Exception(f"Не удалось получить {url} после {max_retries} попыток")
+
+            # Экспоненциальная задержка между попытками
+            time.sleep((2 ** attempt) + random.uniform(1, 3))
+
+        finally:
+            if driver:
+                driver.quit()
+
+    return None
+
+def get_slow_query_bad(url, t):
     time.sleep(t)
     response = requests.get(url)
     if response.status_code == 200:
@@ -123,6 +256,8 @@ def read_city_from_file(path):
     with open(path, 'r', encoding='utf-8') as f:
         for line in f:
             parts = line.split('\t')
+            if len(parts) > 2:
+                continue
             key, value = parts[0], parts[1]
             d[key] = value[:-1]
     return d
@@ -142,5 +277,53 @@ def get_dictionary_abbreviations_city():
             s, b = l.split(' ', 1)
             d[b] = s.lower()
     print(d)
-#get_dictionary_abbreviations_city()
+    #get_dictionary_abbreviations_city()
+
+def init_d():
+    global cash_coordinates
+    global cash_time
+    global is_init_d
+    if not is_init_d:
+        coordinates_dir = '../transport/data_coordinates'
+        for filename in os.listdir(coordinates_dir):
+            file_path = os.path.join(coordinates_dir, filename)
+            name_city = file_path.replace('.txt', '')
+            with open(file_path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    parts = line.split('\t')
+                    name_route, answer_stop = parts[0], RouteCoordinates.from_json(parts[1])
+                    cash_coordinates[(name_city, name_route)] = answer_stop
+
+        time_dir = '../transport/data_time'
+        for filename in os.listdir(time_dir):
+            file_path = os.path.join(time_dir, filename)
+            name_city = file_path.replace('.txt', '')
+            with open(file_path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    parts = line.split('\t')
+                    name_route, route_times = parts[0], RouteTimes.from_json(parts[1])
+                    cash_time[(name_city, name_route)] = route_times
+        is_init_d = True
+    return cash_coordinates, cash_time
+
+def get_coordinates(name_city, name_route):
+    cash_coordinates_l, _ = init_d()
+    if (name_city, name_route) not in cash_coordinates_l:
+        return None
+    return cash_coordinates_l[(name_city, name_route)]
+
+
+def get_time(name_city, name_route):
+    _, cash_time_l = init_d()
+    if (name_city, name_route) not in cash_time_l:
+        return None
+    return cash_time_l[(name_city, name_route)]
+
+
+
+
+
+
+
+
 

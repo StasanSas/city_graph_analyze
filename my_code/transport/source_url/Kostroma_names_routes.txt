@@ -1,16 +1,16 @@
-Автобус 1	https://kudikina.ru/kostr/bus/1
-Автобус 2	https://kudikina.ru/kostr/bus/2
-Автобус 3	https://kudikina.ru/kostr/bus/3
-Автобус 4	https://kudikina.ru/kostr/bus/4
-Автобус 5	https://kudikina.ru/kostr/bus/5
-Автобус 7	https://kudikina.ru/kostr/bus/7
-Автобус 8	https://kudikina.ru/kostr/bus/8
-Автобус 13	https://kudikina.ru/kostr/bus/13
-Автобус 14	https://kudikina.ru/kostr/bus/14
-Автобус 15	https://kudikina.ru/kostr/bus/15
-Автобус 16	https://kudikina.ru/kostr/bus/16
-Автобус 17	https://kudikina.ru/kostr/bus/17
-Автобус 18	https://kudikina.ru/kostr/bus/18
+Автобус 1	https://kudikina.ru/kostr/bus/1	processed
+Автобус 2	https://kudikina.ru/kostr/bus/2	processed
+Автобус 3	https://kudikina.ru/kostr/bus/3	processed
+Автобус 4	https://kudikina.ru/kostr/bus/4	processed
+Автобус 5	https://kudikina.ru/kostr/bus/5	processed
+Автобус 7	https://kudikina.ru/kostr/bus/7	processed
+Автобус 8	https://kudikina.ru/kostr/bus/8	processed
+Автобус 13	https://kudikina.ru/kostr/bus/13	processed
+Автобус 14	https://kudikina.ru/kostr/bus/14	processed
+Автобус 15	https://kudikina.ru/kostr/bus/15	processed
+Автобус 16	https://kudikina.ru/kostr/bus/16	processed
+Автобус 17	https://kudikina.ru/kostr/bus/17	processed
+Автобус 18	https://kudikina.ru/kostr/bus/18	processed
 Автобус 18к	https://kudikina.ru/kostr/bus/18k
 Автобус 21	https://kudikina.ru/kostr/bus/21
 Автобус 21к	https://kudikina.ru/kostr/bus/21k

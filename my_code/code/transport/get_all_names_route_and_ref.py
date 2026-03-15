@@ -32,20 +32,22 @@ def get_all_names_route_and_ref(url, name) -> dict[str, str]:
     d = read_city_from_file(path)
     return d
 
+def set_process_source(name_city, url):
+    path = f"../transport/source_url/{name_city}_names_routes.txt"
+    if os.path.exists(path):
+        temp_file = f"../transport/source_url/{name_city}_names_routes.txt" + '.tmp'
 
+        with open(path, 'r', encoding='utf-8') as read_file:
+            with open(temp_file, 'w', encoding='utf-8') as write_file:
+                for line in read_file:
+                    if line.endswith(url + '\n'):
+                        write_file.write(line.replace('\n', '') + '\tprocessed\n')
+                    else:
+                        write_file.write(line)
 
-
-
-
-
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.content, 'html.parser')
-        bus_items = soup.find_all(class_="bus-item")
-        mar = []
-
-        for i, item in enumerate(bus_items, 1):
-            ref = item.get('href')
-            mar.append(ref.split('/')[-1])
-        return mar
+        # Заменяем оригинал временным файлом
+        os.remove(path)
+        os.rename(temp_file, path)
     else:
-        print(f"Ошибка: {response.status_code}")
+        raise Exception("Нету файла источников для города")
+
