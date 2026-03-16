@@ -288,7 +288,7 @@ def init_d():
                 dir_route_path = os.path.join(dir_city_path, filename_route)
                 route_name = filename_route.replace('.txt', '')
                 with open(dir_route_path, 'r', encoding='utf-8') as f:
-                    content = f.readlines()[0]
+                    content = f.read()
                     answer_stop =  RouteCoordinates.from_json(content)
                     cash_coordinates[(dir_city_name, route_name)] = answer_stop
 
@@ -300,7 +300,7 @@ def init_d():
                 dir_route_path = os.path.join(dir_city_path, filename_route)
                 route_name = filename_route.replace('.txt', '')
                 with open(dir_route_path, 'r', encoding='utf-8') as f:
-                    content = f.readlines()[0]
+                    content = f.read()
                     route_times =  RouteTimes.from_json(content)
                     cash_time[(dir_city_name, route_name)] = route_times
         is_init_d = True

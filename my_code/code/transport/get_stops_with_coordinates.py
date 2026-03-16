@@ -42,7 +42,7 @@ def get_cashed_stops_with_coordinates(name_city, name, ref) -> RouteCoordinates:
     if get_coordinates(name_city, name) is None:
         route_coordinates = get_stops_with_coordinates(name, ref)
         with open(path, 'w', encoding='utf-8') as file:
-            file.write(f'{route_coordinates.to_json()}')
+            file.write(f'{route_coordinates.to_json(ensure_ascii=False, indent=2)}')
         return route_coordinates
     else:
         return get_coordinates(name_city, name)

@@ -14,6 +14,7 @@ def get_route_times_by_soup(name_route: str, soup : BeautifulSoup) -> SubRouteTi
         name_stop_content = str(stop.find('a').contents[0]) #text
         name_stop = name_stop_content[name_stop_content.find(')') + 1:].strip()
         times = map(lambda span: str(span.contents[0]), stop.find_all('span'))
+        times = filter(lambda time: time != "Показать все", times)
         stop_time.append(StopTime(name_stop, list(times)))
     return SubRouteTimes(name_route, stop_time)
 
@@ -41,12 +42,12 @@ def get_route_times(name, url) -> RouteTimes:
     return RouteTimes(name, sub_route_times)
 
 def get_cashed_route_times(name_city, name, ref) -> RouteTimes:
-    path = f"../transport/data_coordinates/{name_city}/{name}.txt"
+    path = f"../transport/data_time/{name_city}/{name}.txt"
     os.makedirs(os.path.dirname(path), exist_ok=True)
     if get_time(name_city, name) is None:
         route_time = get_route_times(name, ref)
         with open(path, 'w', encoding='utf-8') as file:
-            file.write(f'{route_time.to_json()}')
+            file.write(f'{route_time.to_json(ensure_ascii=False, indent=2)}')
         return route_time
     else:
         return get_time(name_city, name)
