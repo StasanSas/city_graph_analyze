@@ -28,14 +28,21 @@ class RouteCoordinates:
 
 @dataclass_json
 @dataclass
-class RouteTime:
-    stops: List[str]
+class StopTime:
+    stop_name: str
     time: List[str]
 
 @dataclass_json
 @dataclass
+class SubRouteTimes:
+    name: str
+    time_stops: List[StopTime]
+
+@dataclass_json
+@dataclass
 class RouteTimes:
-    data_times: List[RouteTime]
+    name: str
+    data_sub_route: List[SubRouteTimes]
 
 class Route:
     def __init__(self, name):

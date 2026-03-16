@@ -10,7 +10,7 @@ def get_all_names_route_and_ref(url, name) -> dict[str, str]:
     path = f"../transport/source_url/{name}_names_routes.txt"
     d = {}
     if not os.path.exists(path):
-        s = get_slow_query(url, 1)
+        s = get_slow_query(url, 15)
         types_route_object = s.find(class_="nav-pills").find_all('a')
         new_refs = []
         for types_object in types_route_object:

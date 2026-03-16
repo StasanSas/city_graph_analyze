@@ -220,7 +220,6 @@ def get_slow_query(url, wait_time=10, max_retries=3, use_proxy=False, proxy=None
 
             html = driver.page_source
             soup = BeautifulSoup(html, "html.parser")
-
             # Проверяем не капча ли
             if "captcha" in html.lower() or "access denied" in html.lower():
                 raise Exception("Обнаружена капча или блокировка")
@@ -287,7 +286,7 @@ def init_d():
         coordinates_dir = '../transport/data_coordinates'
         for filename in os.listdir(coordinates_dir):
             file_path = os.path.join(coordinates_dir, filename)
-            name_city = file_path.replace('.txt', '')
+            name_city = filename.replace('.txt', '')
             with open(file_path, 'r', encoding='utf-8') as f:
                 for line in f:
                     parts = line.split('\t')
@@ -297,7 +296,7 @@ def init_d():
         time_dir = '../transport/data_time'
         for filename in os.listdir(time_dir):
             file_path = os.path.join(time_dir, filename)
-            name_city = file_path.replace('.txt', '')
+            name_city = filename.replace('.txt', '')
             with open(file_path, 'r', encoding='utf-8') as f:
                 for line in f:
                     parts = line.split('\t')
