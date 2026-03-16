@@ -6,7 +6,7 @@ from my_code.code.utilite import get_slow_query, get_slow_query_bad, get_coordin
 import re
 
 
-def get_stops_with_coordinates(ref) -> tuple[list[Stop], list[Point]]:
+def get_stops_with_coordinates(name, ref) -> RouteCoordinates:
     s = get_slow_query(ref + '/map', 15)
     scripts_without_attrs = [str(script) for script in s.find_all('script') if len(script.attrs) == 1]
     filtered_script = filter(lambda c: 'drawMap(' in c, scripts_without_attrs)
@@ -34,19 +34,16 @@ def get_stops_with_coordinates(ref) -> tuple[list[Stop], list[Point]]:
             coordinates_object.append(Point(lan, lon))
         point_stop = stops_object[i + 1]
         coordinates_object.append(Point(point_stop.lat, point_stop.lon))
-    return stops_object, coordinates_object
+    return RouteCoordinates(name, stops_object, coordinates_object)
 
 def get_cashed_stops_with_coordinates(name_city, name, ref) -> RouteCoordinates:
-    path = f"../transport/data_coordinates/{name_city}.txt"
-    if not os.path.exists(path):
-        with open(path, 'w') as file:
-            file.write('')
+    path = f"../transport/data_coordinates/{name_city}/{name}.txt"
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     if get_coordinates(name_city, name) is None:
-        stops_object, coordinates_object = get_stops_with_coordinates(ref)
-        obj_for_json = RouteCoordinates(name, stops_object, coordinates_object)
-        with open(path, 'a', encoding='utf-8') as file:
-            file.write(f'{name}\t{obj_for_json.to_json()}\n')
-        return obj_for_json
+        route_coordinates = get_stops_with_coordinates(name, ref)
+        with open(path, 'w', encoding='utf-8') as file:
+            file.write(f'{route_coordinates.to_json()}')
+        return route_coordinates
     else:
         return get_coordinates(name_city, name)
 

@@ -221,8 +221,6 @@ def get_slow_query(url, wait_time=10, max_retries=3, use_proxy=False, proxy=None
             html = driver.page_source
             soup = BeautifulSoup(html, "html.parser")
             # Проверяем не капча ли
-            if "captcha" in html.lower() or "access denied" in html.lower():
-                raise Exception("Обнаружена капча или блокировка")
 
             return soup
 
@@ -284,24 +282,27 @@ def init_d():
     global is_init_d
     if not is_init_d:
         coordinates_dir = '../transport/data_coordinates'
-        for filename in os.listdir(coordinates_dir):
-            file_path = os.path.join(coordinates_dir, filename)
-            name_city = filename.replace('.txt', '')
-            with open(file_path, 'r', encoding='utf-8') as f:
-                for line in f:
-                    parts = line.split('\t')
-                    name_route, answer_stop = parts[0], RouteCoordinates.from_json(parts[1])
-                    cash_coordinates[(name_city, name_route)] = answer_stop
+        for dir_city_name in os.listdir(coordinates_dir):
+            dir_city_path = os.path.join(coordinates_dir, dir_city_name)
+            for filename_route in os.listdir(dir_city_path):
+                dir_route_path = os.path.join(dir_city_path, filename_route)
+                route_name = filename_route.replace('.txt', '')
+                with open(dir_route_path, 'r', encoding='utf-8') as f:
+                    content = f.readlines()[0]
+                    answer_stop =  RouteCoordinates.from_json(content)
+                    cash_coordinates[(dir_city_name, route_name)] = answer_stop
 
         time_dir = '../transport/data_time'
-        for filename in os.listdir(time_dir):
-            file_path = os.path.join(time_dir, filename)
-            name_city = filename.replace('.txt', '')
-            with open(file_path, 'r', encoding='utf-8') as f:
-                for line in f:
-                    parts = line.split('\t')
-                    name_route, route_times = parts[0], RouteTimes.from_json(parts[1])
-                    cash_time[(name_city, name_route)] = route_times
+
+        for dir_city_name in os.listdir(time_dir):
+            dir_city_path = os.path.join(time_dir, dir_city_name)
+            for filename_route in os.listdir(dir_city_path):
+                dir_route_path = os.path.join(dir_city_path, filename_route)
+                route_name = filename_route.replace('.txt', '')
+                with open(dir_route_path, 'r', encoding='utf-8') as f:
+                    content = f.readlines()[0]
+                    route_times =  RouteTimes.from_json(content)
+                    cash_time[(dir_city_name, route_name)] = route_times
         is_init_d = True
     return cash_coordinates, cash_time
 

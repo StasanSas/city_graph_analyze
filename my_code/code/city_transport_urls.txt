@@ -85,7 +85,7 @@
 Камышин	https://kudikina.ru/kamis/
 Краснослободск	https://kudikina.ru/krass/
 Новоаннинский	https://kudikina.ru/novoa/
-Урюпинск	https://kudikina.ru/uryup/
+Урюпинск	https://kudikina.rАu/uryup/
 Фролово	https://kudikina.ru/frolo/
 Фроловский	https://kudikina.ru/frolv/
 Калининград	https://kudikina.ru/klgd/
