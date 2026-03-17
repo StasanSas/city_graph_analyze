@@ -1,4 +1,5 @@
 ﻿import os
+from typing import List
 
 from bs4 import BeautifulSoup
 
@@ -17,6 +18,57 @@ def get_route_times_by_soup(name_route: str, soup : BeautifulSoup) -> SubRouteTi
         times = filter(lambda time: time != "Показать все", times)
         stop_time.append(StopTime(name_stop, list(times)))
     return SubRouteTimes(name_route, stop_time)
+
+def process_time(name_stop, soup_row) -> StopTime:
+    interval_time = soup_row.find(class_='interval-times')
+    stop_times = soup_row.find(class_='stop-times')
+    if stop_times is not None:
+        times = map(lambda span: str(span.contents[0]), soup_row.find_all('span'))
+        times = filter(lambda time: time != "Показать все", times)
+        return StopTime(name_stop, list(times))
+    if interval_time is not None:
+        interval_delta = soup_row.find(class_='interval-delta')
+        interval_values_obj = interval_time.find_all('span')
+        interval_values = list(map(lambda span: str(span.contents[0]), interval_values_obj))
+        if len(interval_values) != 2:
+            raise Exception(f'Непредвиденный интервал {name_stop}')
+
+        small_time_intervals = interval_delta.find('thead').find_all('th')
+        small_intervals = list(map(lambda span: str(span.contents[0]).split(' - '), small_time_intervals))
+        #
+        deltas_obj = interval_delta.find('tbody').find_all('td')
+        deltas = list(map(lambda delta: str(delta.contents[0]), deltas_obj))
+        converted_deltas = []
+        for delta in deltas:
+            delta_s = delta.split(' ')
+            if len(delta_s) != 2 or delta_s[1] != 'мин':
+                raise Exception(f'Непредвиденный формат дельты {name_stop}')
+            converted_deltas.append(delta_s[0])
+        times = convert_intervals_and_deltas_in_time_stop(small_intervals, converted_deltas)
+        return StopTime(name_stop, times)
+    else:
+        raise Exception(f'Не знаем как обрабатывать {name_stop}')
+
+
+def convert_intervals_and_deltas_in_time_stop(small_intervals, deltas) -> List[str]: # времена в виде строки
+    current_time = None
+    result = []
+    for i in range(len(small_intervals)):
+        small_interval = small_intervals[i]
+        start_time_parts = small_interval[0].split(':')
+        start_time = int(start_time_parts[0]) * 60 + int(start_time_parts[1])
+        end_time_parts = small_interval[1].split(':')
+        end_time = int(end_time_parts[0]) * 60 + int(end_time_parts[1])
+        current_time = start_time if current_time is None else current_time
+
+        delta = int(deltas[i])
+        delta = delta if delta > 4 else 5
+
+        while (current_time < end_time):
+            time_str_for_add = current_time.strftime('%H:%M')
+            result.append(time_str_for_add)
+            current_time += delta
+    return result
 
 
 def get_route_times(name, url) -> RouteTimes:

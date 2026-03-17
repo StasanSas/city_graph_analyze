@@ -11,4 +11,4 @@ from my_code.code.utilite import get_slow_query
 
 #get_all_names_route_and_ref("https://kudikina.ru/kostr/", 'Kostroma')
 
-get_all_routes_with_coordinates_and_time('https://kudikina.ru/kostr/', 'Kostroma')
+get_all_routes_with_coordinates_and_time('https://kudikina.ru/mahac', 'Makhachkala')
