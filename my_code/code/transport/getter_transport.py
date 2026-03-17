@@ -41,5 +41,3 @@ def get_all_stops_bus(routes_bus_list_name):
             time_r = [str(time.contents[0]) for time in stops_time_obj if time.get('class') != 'show-all']
             print(time_r)
 
-routes = get_all_routes_bus()
-stops = get_all_stops_bus(routes)
