@@ -10,14 +10,13 @@ from my_code.code.utilite import get_slow_query, get_time
 def get_route_times_by_soup(name_route: str, soup : BeautifulSoup) -> SubRouteTimes:
     list_stops = soup.find(class_='bus-stops')
     stops = list_stops.find_all(class_='row')
-    stop_time = [] # StopTime
+    stop_times = [] # StopTime
     for stop in stops:
         name_stop_content = str(stop.find('a').contents[0]) #text
         name_stop = name_stop_content[name_stop_content.find(')') + 1:].strip()
-        times = map(lambda span: str(span.contents[0]), stop.find_all('span'))
-        times = filter(lambda time: time != "Показать все", times)
-        stop_time.append(StopTime(name_stop, list(times)))
-    return SubRouteTimes(name_route, stop_time)
+        stop_time = process_time(name_stop, stop)
+        stop_times.append(stop_time)
+    return SubRouteTimes(name_route, stop_times)
 
 def process_time(name_stop, soup_row) -> StopTime:
     interval_time = soup_row.find(class_='interval-times')
@@ -64,8 +63,8 @@ def convert_intervals_and_deltas_in_time_stop(small_intervals, deltas) -> List[s
         delta = int(deltas[i])
         delta = delta if delta > 4 else 5
 
-        while (current_time < end_time):
-            time_str_for_add = current_time.strftime('%H:%M')
+        while (current_time <= end_time):
+            time_str_for_add = f"{current_time // 60:02d}:{current_time % 60:02d}"
             result.append(time_str_for_add)
             current_time += delta
     return result
