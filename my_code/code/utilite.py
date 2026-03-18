@@ -71,6 +71,13 @@ def get_node_by_coords(value, graph):
 
     return best_node
 
+def get_time_in_min(s):
+    split_str = s.split(':')
+    return int(split_str[0]) * 60 + int(split_str[1])
+
+def get_str_time(current_time):
+    return f"{current_time // 60:02d}:{current_time % 60:02d}"
+
 def get_mode_class(mode, file):
     if mode == 'walk':
         return WalkMode(file=file)

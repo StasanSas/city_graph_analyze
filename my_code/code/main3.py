@@ -1,18 +1,23 @@
 ﻿import networkx as nx
 
 from my_code.code.cleaning.cleaner_2chains import Cleaner2Chains
+from my_code.code.cleaning.cleaner_one_connected_component import CleanerConnectedComponents
 from my_code.code.exper.calculate_length_edges import main
 from my_code.code.exper.visualize import find_and_visualize_area
 from my_code.code.utilite import read_graphml
 
-main()
+#main()
 
+path_input = "Kostroma.graphml"
+path_output = "one_component/Kostroma.graphml"
+cleaner = CleanerConnectedComponents()
+cleaner.run(path_input, path_output)
 
 path_input = "one_component/Kostroma.graphml"
 path_output = "one_component__and__without_2_chains/Kostroma.graphml"
 cleaner = Cleaner2Chains()
 
-#cleaner.run(path_input, path_output)
+cleaner.run(path_input, path_output)
 
 graph = read_graphml(path_output)
 #graph = nx.read_graphml("C:\\Users\\stanislav.ivanov\\Desktop\\city_graph_analyze\\my_code\\city_pedestrian_graph\\Kostroma.graphml")

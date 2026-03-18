@@ -23,17 +23,15 @@ def get_stops_with_coordinates(name, ref) -> RouteCoordinates:
 
     coordinates_object = []
     coordinates_path[0] = coordinates_path[0][1:]
-    start_lan, start_lon = stops_object[0].lat, stops_object[0].lon
-    coordinates_object.append(Point(start_lon, start_lan))
 
     for i in range(len(coordinates_path)):
+        coordinates_way = []
         points = coordinates_path[i][2:-3].split('],[')
         for point_str in points:
             point_s = point_str.split(',')
             lan, lon = float(point_s[0]), float(point_s[1])
-            coordinates_object.append(Point(lon, lan))
-        point_stop = stops_object[i + 1]
-        coordinates_object.append(Point(point_stop.lon, point_stop.lat))
+            coordinates_way.append(Point(lon, lan))
+        coordinates_object.append(coordinates_way)
     return RouteCoordinates(name, stops_object, coordinates_object)
 
 def get_cashed_stops_with_coordinates(name_city, name, ref) -> RouteCoordinates:

@@ -1,2 +1,1 @@
-﻿Автобус 16р	https://kudikina.ru/mahac/bus/16r
-Троллейбус	8https://kudikina.ru/mahac/trolley/8
+﻿Троллейбус 8	https://kudikina.ru/mahac/trolley/8	processed

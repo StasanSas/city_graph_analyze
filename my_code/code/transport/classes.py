@@ -23,7 +23,7 @@ class Stop:
 class RouteCoordinates:
     name: str
     stops: List[Stop]
-    points: List[Point]
+    points: List[List[Point]]
 
 
 @dataclass_json
@@ -37,6 +37,14 @@ class StopTime:
 class SubRouteTimes:
     name: str
     time_stops: List[StopTime]
+
+
+@dataclass_json
+@dataclass
+class SubRouteTimesNormalized:
+    points: List[Point]
+    times_list: List[List[str]] # каждый массив соответствует одному проезду автобуса/трамвая/троллейбуса/маршрутки
+    # длина каждого массива в массиве = длине points
 
 @dataclass_json
 @dataclass
