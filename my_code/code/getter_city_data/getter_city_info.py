@@ -133,7 +133,7 @@ async def run_osmium_extract_async(filename, graph_filename):
     """Асинхронный запуск osmium"""
     process = await asyncio.create_subprocess_exec(
         "osmium", "extract", "-p", filename,
-        "../russia-251026.osm.pbf", "-o", graph_filename,
+        "../../../old_code/big/russia-251026.osm.pbf", "-o", graph_filename,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE
     )

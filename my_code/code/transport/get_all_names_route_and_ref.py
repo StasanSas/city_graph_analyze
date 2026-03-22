@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from my_code.code.utilite import get_slow_query, write_city_from_file, read_city_from_file
 
 
-def get_all_names_route_and_ref(url, name) -> dict[str, str]:
+def get_all_names_route_and_ref(url, name, load_processed = True) -> dict[str, str]:
     path = f"../transport/source_url/{name}_names_routes.txt"
     d = {}
     if not os.path.exists(path):
@@ -29,7 +29,7 @@ def get_all_names_route_and_ref(url, name) -> dict[str, str]:
                 d[name] = url + href_route
 
         write_city_from_file(path, d)
-    d = read_city_from_file(path)
+    d = read_city_from_file(path, load_processed)
     return d
 
 def set_process_source(name_city, url):

@@ -17,10 +17,10 @@ class H3Index:
         self.cells = {}
 
         for node_id, d in coords.items():
-            cell = h3.latlng_to_cell(d['x_coord'], d['y_coord'], resolution)
+            cell = h3.latlng_to_cell(d['y_coord'], d['x_coord'], resolution)
             self.cells.setdefault(cell, []).append(node_id)
 
-    def nearest(self, lat: float, lon: float, k: int = 1) -> Any:
+    def nearest(self, lat: float, lon: float, k: int = 1) -> int:
         """
         Возвращает id ближайшей вершины из словаря за O(1) по координатам
         """

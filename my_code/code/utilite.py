@@ -2,6 +2,8 @@ import math
 import os
 import random
 import time
+from datetime import time
+from pathlib import Path
 
 import requests
 from selenium.webdriver.common.by import By
@@ -76,7 +78,27 @@ def get_time_in_min(s):
     return int(split_str[0]) * 60 + int(split_str[1])
 
 def get_str_time(current_time):
-    return f"{current_time // 60:02d}:{current_time % 60:02d}"
+    total_seconds = int(current_time * 60)  # минуты → секунды
+    hours = total_seconds // 3600
+    minutes = (total_seconds % 3600) // 60
+    seconds = total_seconds % 60
+
+    if hours > 0:
+        return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+    else:
+        return f"{minutes:02d}:{seconds:02d}"
+
+
+def restore_to_time(time_str):
+    """Восстанавливает объект time из строки, возвращённой get_str_time"""
+    parts = time_str.split(':')
+
+    if len(parts) == 2:  # ММ:СС
+        minutes, seconds = map(int, parts)
+        return time(hour=0, minute=minutes, second=seconds)
+    else:  # ЧЧ:ММ:СС
+        hours, minutes, seconds = map(int, parts)
+        return time(hour=hours, minute=minutes, second=seconds)
 
 def get_mode_class(mode, file):
     if mode == 'walk':
@@ -120,7 +142,7 @@ def write_graphml(graph : nx.Graph, part_path : str) -> None:
     if len(parts_path) != 2:
         raise Exception("Дай папку")
     if not os.path.isdir(os.path.join(base_path, parts_path[0])):
-        raise Exception("Нет такой папки")
+        Path(os.path.join(base_path, parts_path[0])).mkdir(parents=True, exist_ok=True)
     path = os.path.join(base_path, part_path)
     nx.write_graphml(
         graph,
@@ -255,12 +277,12 @@ def get_slow_query_bad(url, t):
     else:
         raise Exception(f"Ошибка: {url} - {response.status_code}")
 
-def read_city_from_file(path):
+def read_city_from_file(path, load_processed = True):
     d = {}
     with open(path, 'r', encoding='utf-8') as f:
         for line in f:
             parts = line.split('\t')
-            if len(parts) > 2:
+            if len(parts) > 2 and not load_processed:
                 continue
             key, value = parts[0], parts[1]
             d[key] = value[:-1]
