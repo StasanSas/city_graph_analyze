@@ -6,7 +6,6 @@ import numpy as np
 
 from my_code.code.algos.transport_routes import TransportRoute, TransportRoutes
 from my_code.code.transport.classes import StopTime, RouteCoordinates, SubRouteTimes, Stop
-from my_code.code.transport.get_stops import get_nearest_points
 from my_code.code.utilite import get_time_in_min, haversine, get_str_time
 
 
@@ -123,9 +122,9 @@ def get_dict_distance(route_coordinates : RouteCoordinates) -> dict[tuple[str, s
         points = route_coordinates.points[stop_start_i]
         distance = 0
         for point_start, point_end in zip(points[:-2], points[1:]):
-            distance += haversine((point_start.y, point_start.x), (point_end.y, point_end.x))
+            distance += haversine((point_start.lat, point_start.lon), (point_end.lat, point_end.lon))
 
-        d_distance[(stop_start_name, stop_end_name)] = distance
+        d_distance[(stop_start_name.name, stop_end_name.name)] = distance
     return d_distance
 
 

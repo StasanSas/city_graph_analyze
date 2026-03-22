@@ -23,8 +23,8 @@ def get_d_with_one_point(stops: List[Stop]) -> dict[str, Point]:
     for stop in d_list.keys():
         point_lat, point_lon = 0, 0
         for point in d_list[stop]:
-            point_lon += point.x
-            point_lat += point.y
+            point_lon += point.lon
+            point_lat += point.lat
         l = len(d_list[stop])
         d_result[stop] = Point(point_lon / l, point_lat / l)
     return d_result
