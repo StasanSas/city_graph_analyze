@@ -2,8 +2,17 @@
 from typing import Any
 
 import h3
+import networkx as nx
+import networkit as nk
 
 from my_code.code.utilite import haversine
+
+def get_h3_resolution_for_current_size(size_in_metter : float) -> int:
+    for resolution in range(15, -1, -1):
+        h3_radius = h3.average_hexagon_edge_length(resolution, unit='m')
+        if h3_radius > size_in_metter:
+            return resolution
+
 
 
 class H3Index:
@@ -48,3 +57,17 @@ class H3Index:
         )
 
         return nearest_nodes[0]
+
+
+
+    def get_stupid_center(self, graph: nk.Graph):
+        result = []
+
+        for cell, node_ids in self.cells.items():
+            nodes_sortes = sorted(node_ids, key=lambda node_id: graph.degree(node_id), reverse=True)
+            lat, lng = h3.cell_to_latlng(cell)
+            nodes_sortes = sorted(nodes_sortes, key=lambda node_id: haversine((lat, lng), self.coords[node_id]))
+            result.append(nodes_sortes[0])
+        return result
+
+
