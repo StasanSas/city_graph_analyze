@@ -2,11 +2,11 @@
 
 
 class ResultClusterization:
-    center : set[int]
+    centers : set[int]
     clusters : list[Cluster]
     have_clusters: bool
 
     def __init__(self):
-        self.centers = []
+        self.centers = set()
         self.clusters = []
         self.have_clusters = False

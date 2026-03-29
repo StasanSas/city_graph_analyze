@@ -3,6 +3,8 @@ import os
 
 import folium
 
+from my_code.code.algos.clusterization.Cluster import Cluster
+
 
 def visualize_graph_on_map(graph,
                            lat_min, lat_max,
@@ -85,9 +87,86 @@ def visualize_graph_on_map(graph,
 
     return output_file
 
-def find_and_visualize_area(graph, center_lat, center_lon, radius_km=0.9):
-    """ Найти и визуализировать область вокруг заданной точки.
-    Args: graph: NetworkX граф center_lat, center_lon: центр области radius_km: радиус в километрах """
+import random
+
+def visualize_clusters_on_map(graph,
+                              clusters: list[Cluster],
+                              lat_min, lat_max,
+                              lon_min, lon_max,
+                              output_file="clusters_map.html",
+                              draw_connections=True):
+
+    center_lat = (lat_min + lat_max) / 2
+    center_lon = (lon_min + lon_max) / 2
+
+    m = folium.Map(
+        location=[center_lat, center_lon],
+        zoom_start=15,
+        tiles="OpenStreetMap"
+    )
+
+    def get_node_coords(node):
+        if isinstance(node, tuple):
+            return node
+        else:
+            lon = graph.nodes[str(node)]["x_coord"]
+            lat = graph.nodes[str(node)]["y_coord"]
+            return lat, lon
+
+    def random_color():
+        return "#{:06x}".format(random.randint(0, 0xFFFFFF))
+
+    for cluster in clusters:
+
+        if not cluster.nodes:
+            continue
+
+        color = random_color()
+
+        # --- центр ---
+        center_latlon = get_node_coords(cluster.center)
+
+        folium.CircleMarker(
+            location=center_latlon,
+            radius=6,
+            color=color,
+            fill=True,
+            fill_opacity=1,
+            weight=2
+        ).add_to(m)
+
+        # --- ноды ---
+        for node in cluster.nodes:
+
+            lat, lon = get_node_coords(node)
+
+            if not (lat_min <= lat <= lat_max and lon_min <= lon <= lon_max):
+                continue
+
+            folium.CircleMarker(
+                location=(lat, lon),
+                radius=3,
+                color=color,
+                fill=True,
+                fill_opacity=0.8,
+                weight=1
+            ).add_to(m)
+
+            # --- связь с центром ---
+            if draw_connections:
+                folium.PolyLine(
+                    [center_latlon, (lat, lon)],
+                    color=color,
+                    weight=1,
+                    opacity=0.5
+                ).add_to(m)
+
+    m.save(output_file)
+    print("clusters saved:", output_file)
+
+    return output_file
+
+def get_sizes_for_draw(center_lat, center_lon, radius_km):
     # Примерное преобразование: 1 градус широты ≈ 111 км # 1 градус долготы ≈ 111 * cos(широта) км
     scale_lon = math.cos(math.radians(center_lon))
     lat_delta = radius_km / 111.32
@@ -98,7 +177,15 @@ def find_and_visualize_area(graph, center_lat, center_lon, radius_km=0.9):
     lon_max = center_lon + lon_delta
     print(f"Поиск в области радиусом {radius_km} км вокруг ({center_lat:.5f}, {center_lon:.5f})")
     print(f"Границы: lat [{lat_min:.5f}, {lat_max:.5f}], lon [{lon_min:.5f}, {lon_max:.5f}]")
+    return lat_min, lat_max, lon_min, lon_max
+
+def find_and_visualize_area(graph, center_lat, center_lon, radius_km=0.9):
+    lat_min, lat_max, lon_min, lon_max = get_sizes_for_draw(center_lat, center_lon, radius_km)
     return visualize_graph_on_map(graph, lat_min, lat_max, lon_min, lon_max, output_file=f"area_{radius_km}km.html")
+
+def find_and_visualize_clusters_in_ares(graph, clusters : list[Cluster], center_lat, center_lon, size_cluster, radius_km=0.9):
+    lat_min, lat_max, lon_min, lon_max = get_sizes_for_draw(center_lat, center_lon, radius_km)
+    return visualize_clusters_on_map(graph, clusters, lat_min, lat_max, lon_min, lon_max, output_file=f"size_{size_cluster}_area_{radius_km}km.html")
 # Пример использования:
 def main():
     from old_code.Handler import OSMHandler

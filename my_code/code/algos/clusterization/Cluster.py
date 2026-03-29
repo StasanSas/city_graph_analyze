@@ -9,5 +9,5 @@ class Cluster:
         self.distances: set[float] = set()
 
     def get_score(self):
-        mean_distance = sum(self.distances) / (len(self.distances) + 0.5)
+        mean_distance = sum(self.distances) / (len(self.distances) + 0.001)
         return (len(self.nodes), - mean_distance)
