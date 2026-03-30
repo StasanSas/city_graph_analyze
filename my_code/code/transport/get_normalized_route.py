@@ -76,7 +76,15 @@ def get_index_nearest_correct_stop(indexes_correct : np.ndarray, not_correct_ind
     return (left_index, "found_smaller") if (right_index - not_correct_index > not_correct_index - left_index) else (right_index, "found_bigger")
 
 
+def get_dict_distance(route_coordinates : RouteCoordinates) -> dict[tuple[str, str], float]:
+    d_distance = {}
 
+    for stop_start_i, stop_end_i in zip(range(len(route_coordinates.stops) - 1), range(1, len(route_coordinates.stops))):
+        stop_start = route_coordinates.stops[stop_start_i]
+        stop_end = route_coordinates.stops[stop_end_i]
+        distance = haversine((stop_start.lat, stop_start.lon), (stop_end.lat, stop_end.lon))
+        d_distance[(stop_start.name, stop_end.name)] = 1.1 * distance
+    return d_distance
 def matrix_stop_times_norm(stop_times : list[StopTime]) -> np.ndarray:
     result = []
     for stop_time in stop_times:
@@ -92,40 +100,31 @@ def get_correct_indexes(indexes_where_maybe_correct_stops : np.ndarray, stop_tim
 
     for x in indexes_where_maybe_correct_stops.ravel():  # или arr.flatten()
 
-        indexes_where_smaller = np.where(indexes_where_maybe_correct_stops < x)
-        indexes_where_bigger = np.where(indexes_where_maybe_correct_stops > x)
+        indexes_where_smaller = np.where(indexes_where_maybe_correct_stops < x)[0]
+        indexes_where_bigger = np.where(indexes_where_maybe_correct_stops > x)[0]
 
         matrix_before_stops = norm_m[indexes_where_smaller]
         matrix_after_stops = norm_m[indexes_where_bigger]
 
-        res_smaller = np.max(matrix_before_stops - norm_m[x, :])
-        index_without_contradiction_smaller = np.where(res_smaller < 0)[0]
-        indexes_in_norm_m_smaller = set(indexes_where_smaller[index_without_contradiction_smaller])
+        indexes_in_norm_m_smaller = set()
+        if matrix_before_stops.size > 0:
+            diff_smaller = matrix_before_stops - norm_m[x, :]
+            mask_smaller = np.all(diff_smaller < 0, axis=1)
+            indexes_in_norm_m_smaller = set(indexes_where_smaller[mask_smaller])
 
-        res_bigger = np.min(matrix_after_stops - norm_m[x, :])
-        index_without_contradiction_bigger = np.where(res_bigger > 0)[0]
-        indexes_in_norm_m_bigger = set(indexes_where_bigger[index_without_contradiction_bigger])
+        indexes_in_norm_m_bigger = set()
+        if matrix_after_stops.size > 0:
+            diff_bigger = matrix_after_stops - norm_m[x, :]
+            mask_bigger = np.all(diff_bigger > 0, axis=1)
+            indexes_in_norm_m_bigger = set(indexes_where_bigger[mask_bigger])
 
-        indexes_where_verification1_is_successful = set(indexes_in_norm_m_smaller) | set(indexes_in_norm_m_bigger)
+        indexes_where_verification1_is_successful = (
+            indexes_in_norm_m_smaller | indexes_in_norm_m_bigger
+        )
 
-        if len(indexes_where_verification1_is_successful) >= indexes_where_maybe_correct_stops.shape[0]:
+        if len(indexes_where_verification1_is_successful) >= indexes_where_maybe_correct_stops.shape[0] / 2:
             result.append(x)
     return np.array(result)
-
-
-def get_dict_distance(route_coordinates : RouteCoordinates) -> dict[tuple[str, str], float]:
-    d_distance = {}
-    for stop_start_i, stop_end_i in zip(range(len(route_coordinates.stops) - 1), range(1, len(route_coordinates.stops))):
-        stop_start_name = route_coordinates.stops[stop_start_i]
-        stop_end_name = route_coordinates.stops[stop_end_i]
-
-        points = route_coordinates.points[stop_start_i]
-        distance = 0
-        for point_start, point_end in zip(points[:-2], points[1:]):
-            distance += haversine((point_start.lat, point_start.lon), (point_end.lat, point_end.lon))
-
-        d_distance[(stop_start_name.name, stop_end_name.name)] = distance
-    return d_distance
 
 
 

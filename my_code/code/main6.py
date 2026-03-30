@@ -4,11 +4,11 @@ from my_code.code.utilite import get_slow_query
 
 
 #|
-s = get_slow_query('https://kudikina.ru/kostr/bus/1/map', 10)
+#s = get_slow_query('https://kudikina.ru/kostr/bus/1/map', 10)
 #scripts_without_attrs = [str(script) for script in s.find_all('script') if len(script.attrs) == 1]
 #a = filter(lambda c: 'drawMap(' in c, scripts_without_attrs)
 #print(list(a)[0])
 a = 0
-#load_all_routes_with_coordinates_and_time("https://kudikina.ru/kostr/", 'Kostroma', 'Kostroma_graph.osm.pbf')
+load_all_routes_with_coordinates_and_time("https://kudikina.ru/kostr/", 'Kostroma', 'one_component__and__without_2_chains/Kostroma.graphml')
 
 #load_all_routes_with_coordinates_and_time('https://kudikina.ru/mahac', 'Makhachkala')

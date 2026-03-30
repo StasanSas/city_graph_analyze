@@ -311,6 +311,7 @@ def init_d():
     global is_init_d
     if not is_init_d:
         coordinates_dir = '../transport/data_coordinates'
+        os.makedirs(coordinates_dir, exist_ok=True)
         for dir_city_name in os.listdir(coordinates_dir):
             dir_city_path = os.path.join(coordinates_dir, dir_city_name)
             for filename_route in os.listdir(dir_city_path):
@@ -322,7 +323,7 @@ def init_d():
                     cash_coordinates[(dir_city_name, route_name)] = answer_stop
 
         time_dir = '../transport/data_time'
-
+        os.makedirs(time_dir, exist_ok=True)
         for dir_city_name in os.listdir(time_dir):
             dir_city_path = os.path.join(time_dir, dir_city_name)
             for filename_route in os.listdir(dir_city_path):

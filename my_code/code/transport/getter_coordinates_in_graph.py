@@ -9,6 +9,7 @@ from my_code.code.getter_city_data.getter_nk_graph import nx_to_nk_with_extra
 from my_code.code.transport.classes import Stop, Point
 from my_code.code.utilite import get_slow_query, read_graphml
 
+index = None
 
 def get_d_with_one_point(stops: List[Stop]) -> dict[str, Point]:
     d_list = {}
@@ -30,9 +31,11 @@ def get_d_with_one_point(stops: List[Stop]) -> dict[str, Point]:
     return d_result
 
 def get_id_dict_for_file(d : dict[str, Point], path_file_city : str) -> dict[str, int]:
-    graph = read_graphml(path_file_city)
-    graph_nk, coordinates_data = nx_to_nk_with_extra(graph)
-    index = H3Index(coordinates_data)
+    global index
+    if index is None:
+        graph = read_graphml(path_file_city)
+        graph_nk, coordinates_data = nx_to_nk_with_extra(graph)
+        index = H3Index(coordinates_data)
 
     result = {}
     for name, point in d.items():
