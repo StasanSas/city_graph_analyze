@@ -5,16 +5,15 @@ from typing import List
 import osmium
 import networkx as nx
 
-
+from my_code.code.algos.h3_helper.h3_index import H3Index
+from my_code.code.getter_city_data.getter_nk_graph import nx_to_nk_with_extra
 from my_code.code.transport.classes import Route, Stop, Point, RouteCoordinates, StopTime
 from my_code.code.transport.get_normalized_route import get_normalized_route, get_dict_distance
 from my_code.code.transport.get_all_names_route_and_ref import get_all_names_route_and_ref, set_process_source
 from my_code.code.transport.get_route_time import get_route_times, get_cashed_route_times
 from my_code.code.transport.get_stops_with_coordinates import get_cashed_stops_with_coordinates
 from my_code.code.transport.getter_coordinates_in_graph import get_dict_id_in_graph_by_name_stop
-from my_code.code.utilite import get_slow_query
-
-
+from my_code.code.utilite import get_slow_query, read_graphml
 
 
 def get_dict_for_algos(stop_times: List[StopTime], dict_id_by_name : dict[str, int]) -> dict[tuple[str, str], tuple[str, str]]:
@@ -47,13 +46,16 @@ def write_dict_subroute(path: str, dict_id_by_name : dict[tuple[str, str], tuple
 def load_all_routes_with_coordinates_and_time(base_url, name_city, path_file_city, load_processed = True) -> dict[str, str]:
     d_routes = {} # name_routes : Route
     Path(f"../transport/result/{name_city}").mkdir(parents=True, exist_ok=True)
+    graph = read_graphml(path_file_city)
+    graph_nk, coordinates_data = nx_to_nk_with_extra(graph)
+    index = H3Index(coordinates_data)
 
     names_and_ref = get_all_names_route_and_ref(base_url, name_city, load_processed)
     for name, url in names_and_ref.items():
         try:
             coordinates_data = get_cashed_stops_with_coordinates(name_city, name, url)
             dict_distance = get_dict_distance(coordinates_data)
-            dict_id_by_name = get_dict_id_in_graph_by_name_stop(coordinates_data.stops, path_file_city)
+            dict_id_by_name = get_dict_id_in_graph_by_name_stop(coordinates_data.stops, index)
 
             sub_route_times = get_cashed_route_times(name_city, name, url).data_sub_route
             for sub_route_time in sub_route_times:

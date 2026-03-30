@@ -30,22 +30,16 @@ def get_d_with_one_point(stops: List[Stop]) -> dict[str, Point]:
         d_result[stop] = Point(point_lon / l, point_lat / l)
     return d_result
 
-def get_id_dict_for_file(d : dict[str, Point], path_file_city : str) -> dict[str, int]:
-    global index
-    if index is None:
-        graph = read_graphml(path_file_city)
-        graph_nk, coordinates_data = nx_to_nk_with_extra(graph)
-        index = H3Index(coordinates_data)
-
+def get_id_dict_for_file(d : dict[str, Point], index :  H3Index) -> dict[str, int]:
     result = {}
     for name, point in d.items():
         found_nearest = index.nearest(point.lat, point.lon)
         result[name] = found_nearest
     return result
 
-def get_dict_id_in_graph_by_name_stop(stops: List[Stop], path_file_city : str) -> dict[str, int]:
+def get_dict_id_in_graph_by_name_stop(stops: List[Stop], index : H3Index) -> dict[str, int]:
     d_point_by_name_stop = get_d_with_one_point(stops)
-    result = get_id_dict_for_file(d_point_by_name_stop, path_file_city)
+    result = get_id_dict_for_file(d_point_by_name_stop, index)
     return result
 
 
