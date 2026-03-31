@@ -12,25 +12,13 @@ def get_stops_with_coordinates(name, ref) -> RouteCoordinates:
     filtered_script = filter(lambda c: 'drawMap(' in c, scripts_without_attrs)
     script = list(filtered_script)[0]
     pattern_stop = r"({\"name\":\".+?})"
-    pattern_coordinates = r"(\[\[[\[\d, .\]]+?]])"
 
     stops = re.findall(pattern_stop, str(script))
-    coordinates_path = re.findall(pattern_coordinates, str(script))
     stops_object = []
     for stop in stops:
         stop_dict = json.loads(stop)
         stops_object.append(Stop(stop_dict['name'], float(stop_dict['lat']), float(stop_dict['long'])))
-
-    coordinates_object = []
-    coordinates_path[0] = coordinates_path[0][1:]
-
-    for i in range(len(coordinates_path)):
-        points = coordinates_path[i][2:-3].split('],[')
-        for point_str in points:
-            point_s = point_str.split(',')
-            lan, lon = float(point_s[0]), float(point_s[1])
-            coordinates_object.append(Point(lon, lan))
-    return RouteCoordinates(name, stops_object, coordinates_object)
+    return RouteCoordinates(name, stops_object)
 
 def get_cashed_stops_with_coordinates(name_city, name, ref) -> RouteCoordinates:
     path = f"../transport/data_coordinates/{name_city}/{name}.txt"

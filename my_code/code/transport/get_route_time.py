@@ -7,18 +7,18 @@ from my_code.code.transport.classes import Route, RouteTimes, SubRouteTimes, Sto
 from my_code.code.utilite import get_slow_query, get_time
 
 
-def get_route_times_by_soup(name_route: str, soup : BeautifulSoup) -> SubRouteTimes:
+def get_route_times_by_soup(name_route: str, soup : BeautifulSoup, name : str) -> SubRouteTimes:
     list_stops = soup.find(class_='bus-stops')
     stops = list_stops.find_all(class_='row')
     stop_times = [] # StopTime
     for stop in stops:
         name_stop_content = str(stop.find('a').contents[0]) #text
         name_stop = name_stop_content[name_stop_content.find(')') + 1:].strip()
-        stop_time = process_time(name_stop, stop)
+        stop_time = process_time(name_stop, stop, name)
         stop_times.append(stop_time)
     return SubRouteTimes(name_route, stop_times)
 
-def process_time(name_stop, soup_row) -> StopTime:
+def process_time(name_stop, soup_row, name) -> StopTime:
     interval_time = soup_row.find(class_='interval-times')
     stop_times = soup_row.find(class_='stop-times')
     if stop_times is not None:
@@ -46,7 +46,7 @@ def process_time(name_stop, soup_row) -> StopTime:
         times = convert_intervals_and_deltas_in_time_stop(small_intervals, converted_deltas)
         return StopTime(name_stop, times)
     else:
-        raise Exception(f'Не знаем как обрабатывать {name_stop}')
+        raise Exception(f'Не нашли времени {name_stop} в маршруте {name}')
 
 
 def convert_intervals_and_deltas_in_time_stop(small_intervals, deltas) -> List[str]: # времена в виде строки
@@ -84,12 +84,12 @@ def get_route_times(name, url) -> RouteTimes:
         name_sub_route = name_sub_route[name_sub_route.find(')') + 1:].strip()
         name_routes.append(name + ': ' + name_sub_route)
         url_routes.append(url_route)
-    sub_route_times = [get_route_times_by_soup(name_routes[0], s_start)]
+    sub_route_times = [get_route_times_by_soup(name_routes[0], s_start, name)]
     for i in range(len(url_routes)):
         if url_routes[i] == start_url:
             continue
         soup = get_slow_query(url_routes[i], 15)
-        sub_route_times.append(get_route_times_by_soup(name_routes[i], soup))
+        sub_route_times.append(get_route_times_by_soup(name_routes[i], soup, name))
     return RouteTimes(name, sub_route_times)
 
 def get_cashed_route_times(name_city, name, ref) -> RouteTimes:

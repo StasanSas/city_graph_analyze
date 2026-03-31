@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 from pathlib import Path
 from typing import List
@@ -23,11 +24,15 @@ def get_dict_for_algos(stop_times: List[StopTime], dict_id_by_name : dict[str, i
         stop_time_start = stop_times[i]
         start_times = stop_time_start.time
         start_name = stop_time_start.stop_name
+        if start_name not in dict_id_by_name:
+            continue
         id_start = dict_id_by_name[start_name]
 
         stop_time_end = stop_times[i + 1]
         end_times = stop_time_end.time
         end_name = stop_time_end.stop_name
+        if end_name not in dict_id_by_name:
+            continue
         id_end = dict_id_by_name[end_name]
 
 
@@ -37,10 +42,22 @@ def get_dict_for_algos(stop_times: List[StopTime], dict_id_by_name : dict[str, i
             d[(id_start, start_time)] = (id_end, end_time)
     return d
 
+_INVALID_CHARS = re.compile(r'[\\/*?:"<>|]')
+
+def safe_path(path: str) -> Path:
+    p = Path(path)
+
+    # очищаем только имя файла, не трогая директории
+    safe_name = _INVALID_CHARS.sub('_', p.name)
+
+    return p.with_name(safe_name)
+
 def write_dict_subroute(path: str, dict_id_by_name : dict[tuple[str, str], tuple[str, str]]) -> None:
-    with open(path, 'w', encoding='utf-8') as f:
+    safe_p = safe_path(path)
+    with open(safe_p, 'w+', encoding='utf-8') as f:
         for start, end in dict_id_by_name.items():
-            f.write(f'{start[0]}\t{start[1]}\t{end[0]}\t{end[1]}\n')
+            s = f'{str(start[0])}\t{start[1]}\t{str(end[0])}\t{end[1]}\n'
+            f.write(s)
 
 
 def load_all_routes_with_coordinates_and_time(base_url, name_city, path_file_city, load_processed = True) -> dict[str, str]:

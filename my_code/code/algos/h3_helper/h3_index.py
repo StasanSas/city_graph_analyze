@@ -22,14 +22,14 @@ class H3Index:
         resolution: H3 resolution
         """
         self.resolution = resolution
-        self.coords = {id : (d['x_coord'], d['y_coord']) for id, d in coords.items()}
+        self.coords = {id : (d['y_coord'], d['x_coord']) for id, d in coords.items()}
         self.cells = {}
 
         for node_id, d in coords.items():
             cell = h3.latlng_to_cell(d['y_coord'], d['x_coord'], resolution)
             self.cells.setdefault(cell, []).append(node_id)
 
-    def nearest(self, lat: float, lon: float, k: int = 1) -> int:
+    def nearest(self, lat: float, lon: float, k: int = 1, max_distance = 300) -> int | None:
         """
         Возвращает id ближайшей вершины из словаря за O(1) по координатам
         """
@@ -50,13 +50,19 @@ class H3Index:
             if ring > 10:
                 break
 
-        nearest_nodes = heapq.nsmallest(
-            k,
-            candidates,
-            key=lambda node_id: haversine(query_point, self.coords[node_id]),
-        )
+        distances = [
+            (node_id, haversine(query_point, self.coords[node_id]))
+            for node_id in candidates
+        ]
 
-        return nearest_nodes[0]
+        nearest_nodes = heapq.nsmallest(k, distances, key=lambda x: x[1])
+
+        best_node, best_dist = nearest_nodes[0]
+
+        if best_dist > max_distance:
+            return None
+
+        return best_node
 
 
 

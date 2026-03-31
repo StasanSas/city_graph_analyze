@@ -23,7 +23,6 @@ class Stop:
 class RouteCoordinates:
     name: str
     stops: List[Stop]
-    points: List[Point]
 
 
 @dataclass_json
