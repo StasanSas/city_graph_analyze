@@ -83,7 +83,7 @@ def get_dict_distance(route_coordinates : RouteCoordinates) -> dict[tuple[str, s
         stop_start = route_coordinates.stops[stop_start_i]
         stop_end = route_coordinates.stops[stop_end_i]
         distance = haversine((stop_start.lat, stop_start.lon), (stop_end.lat, stop_end.lon))
-        d_distance[(stop_start.name, stop_end.name)] = 1.1 * distance
+        d_distance[(stop_start.name.title(), stop_end.name.title())] = 1.2 * distance
     return d_distance
 def matrix_stop_times_norm(stop_times : list[StopTime]) -> np.ndarray:
     result = []
@@ -139,6 +139,6 @@ def get_final_distance_between_stops(index_1, index_2, stop_times : list[StopTim
     need_times = stop_times[min_index:max_index+1]
     distance = 0
     for stop_time_start, stop_time_end in zip(need_times[:-2], need_times[1:]):
-        distance += dict_distance[(stop_time_start.stop_name, stop_time_end.stop_name)]
+        distance += dict_distance[(stop_time_start.stop_name.title(), stop_time_end.stop_name.title())]
     return distance
 

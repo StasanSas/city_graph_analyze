@@ -35,7 +35,7 @@ def get_id_dict_for_file(d : dict[str, Point], index : H3Index) -> dict[str, int
     for name, point in d.items():
         found_nearest = index.nearest(point.lat, point.lon)
         if found_nearest is not None:
-            result[name] = found_nearest
+            result[name.title()] = found_nearest
     return result
 
 def get_dict_id_in_graph_by_name_stop(stops: List[Stop], index : H3Index) -> dict[str, int]:

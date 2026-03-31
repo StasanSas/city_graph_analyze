@@ -48,7 +48,7 @@ def safe_path(path: str) -> Path:
     p = Path(path)
 
     # очищаем только имя файла, не трогая директории
-    safe_name = _INVALID_CHARS.sub('_', p.name)
+    safe_name = _INVALID_CHARS.sub('  ', p.name)
 
     return p.with_name(safe_name)
 
