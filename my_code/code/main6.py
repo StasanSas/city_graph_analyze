@@ -12,6 +12,6 @@ a = 0
 test = {("a", "b"): ("c", "d"), ("a1", "b1"): ("c1", "d1")}
 
 #write_dict_subroute("test.txt", test)
-load_all_routes_with_coordinates_and_time("https://kudikina.ru/kostr/", 'Kostroma', 'one_component__and__without_2_chains/Kostroma.graphml', False)
+load_all_routes_with_coordinates_and_time("https://kudikina.ru/kostr/", 'Kostroma', 'one_component__and__without_2_chains/Kostroma.graphml')
 
 #load_all_routes_with_coordinates_and_time('https://kudikina.ru/mahac', 'Makhachkala')

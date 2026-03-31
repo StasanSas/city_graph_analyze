@@ -17,20 +17,20 @@ from my_code.code.transport.getter_coordinates_in_graph import get_dict_id_in_gr
 from my_code.code.utilite import get_slow_query, read_graphml
 
 
-def get_dict_for_algos(stop_times: List[StopTime], dict_id_by_name : dict[str, int]) -> dict[tuple[str, str], tuple[str, str]]:
-    # (id : datatime) : (id : datatime)
+def get_dict_for_algos(stop_times: List[StopTime], dict_id_by_name : dict[str, int]) -> dict[tuple[str, str], list[tuple[str, str]]]:
+    # (id : id) : [(time, time)]
     d = {}
     for i in range(0, len(stop_times) - 1):
         stop_time_start = stop_times[i]
         start_times = stop_time_start.time
-        start_name = stop_time_start.stop_name
+        start_name = stop_time_start.stop_name.title()
         if start_name not in dict_id_by_name:
             continue
         id_start = dict_id_by_name[start_name]
 
         stop_time_end = stop_times[i + 1]
         end_times = stop_time_end.time
-        end_name = stop_time_end.stop_name
+        end_name = stop_time_end.stop_name.title()
         if end_name not in dict_id_by_name:
             continue
         id_end = dict_id_by_name[end_name]
@@ -39,7 +39,9 @@ def get_dict_for_algos(stop_times: List[StopTime], dict_id_by_name : dict[str, i
         for j in range(0, len(stop_time_start.time)):
             start_time = start_times[j]
             end_time = end_times[j]
-            d[(id_start, start_time)] = (id_end, end_time)
+            if (id_start, id_end) not in d:
+                d[(id_start, id_end)] = []
+            d[(id_start, id_end)].append((start_time, end_time))
     return d
 
 _INVALID_CHARS = re.compile(r'[\\/*?:"<>|]')
@@ -52,11 +54,11 @@ def safe_path(path: str) -> Path:
 
     return p.with_name(safe_name)
 
-def write_dict_subroute(path: str, dict_id_by_name : dict[tuple[str, str], tuple[str, str]]) -> None:
+def write_dict_subroute(path: str, dict_id_by_name : dict[tuple[str, str], list[tuple[str, str]]]) -> None:
     safe_p = safe_path(path)
     with open(safe_p, 'w+', encoding='utf-8') as f:
-        for start, end in dict_id_by_name.items():
-            s = f'{str(start[0])}\t{start[1]}\t{str(end[0])}\t{end[1]}\n'
+        for names, times in dict_id_by_name.items():
+            s = f'{names[0]}\t{names[1]}\t{",".join(map(lambda x: f'({x[0]},{x[1]})', times))}\n'
             f.write(s)
 
 

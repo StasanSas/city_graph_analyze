@@ -44,7 +44,7 @@ def process_time(name_stop, soup_row, name) -> StopTime:
                 raise Exception(f'Непредвиденный формат дельты {name_stop}')
             converted_deltas.append(delta_s[0])
         times = convert_intervals_and_deltas_in_time_stop(small_intervals, converted_deltas)
-        return StopTime(name_stop, times)
+        return StopTime(name_stop.title(), times)
     else:
         raise Exception(f'Не нашли времени {name_stop} в маршруте {name}')
 
