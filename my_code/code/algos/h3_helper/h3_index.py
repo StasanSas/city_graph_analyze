@@ -47,7 +47,7 @@ class H3Index:
                     candidates.update(self.cells[c])
 
             ring += 1
-            if ring > 10:
+            if ring > 8:
                 break
 
         distances = [
@@ -56,6 +56,9 @@ class H3Index:
         ]
 
         nearest_nodes = heapq.nsmallest(k, distances, key=lambda x: x[1])
+
+        if len(nearest_nodes) == 0:
+            return None
 
         best_node, best_dist = nearest_nodes[0]
 

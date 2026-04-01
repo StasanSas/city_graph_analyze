@@ -1,6 +1,6 @@
 import networkit as nk
 
-from my_code.code.algos.transport_routes import TransportRoutes, DataArrival
+from my_code.code.algos.transport_routes.transport_routes import TransportRoutes, DataArrival
 
 
 class DijkstraWithTransport(nk.distance.Dijkstra):

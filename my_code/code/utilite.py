@@ -1,6 +1,7 @@
 import math
 import os
 import random
+import re
 import time
 from datetime import time
 from pathlib import Path
@@ -30,6 +31,18 @@ cash_coordinates = {} #('name_city', 'name_route') : (AnswerStop)
 cash_time = {} #('name_city', 'name_route') : (RouteTimes)
 
 driver = None
+
+_INVALID_CHARS = re.compile(r'[\\/*?:"<>|]')
+def safe_str(s: str) -> str:
+    return _INVALID_CHARS.sub(' ', s)
+
+def safe_path(path: str) -> Path:
+    p = Path(path)
+
+    # очищаем только имя файла, не трогая директории
+    safe_name = safe_str(p.name)
+
+    return p.with_name(safe_name)
 def delete_empty_files(directory):
     """Удаляет все пустые файлы в указанной директории"""
     deleted_count = 0
@@ -75,7 +88,10 @@ def get_node_by_coords(value, graph):
 
 def get_time_in_min(s):
     split_str = s.split(':')
-    return int(split_str[0]) * 60 + int(split_str[1])
+    if len(split_str) == 2:
+        return int(split_str[0]) * 60 + int(split_str[1])
+    if len(split_str) == 3:
+        return int(split_str[0]) * 60 + int(split_str[1]) * 60 + int(split_str[2]) / 60
 
 def get_str_time(current_time):
     total_seconds = int(current_time * 60)  # минуты → секунды

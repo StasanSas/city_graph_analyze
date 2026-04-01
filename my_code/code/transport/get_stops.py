@@ -14,7 +14,7 @@ from my_code.code.transport.get_all_names_route_and_ref import get_all_names_rou
 from my_code.code.transport.get_route_time import get_route_times, get_cashed_route_times
 from my_code.code.transport.get_stops_with_coordinates import get_cashed_stops_with_coordinates
 from my_code.code.transport.getter_coordinates_in_graph import get_dict_id_in_graph_by_name_stop
-from my_code.code.utilite import get_slow_query, read_graphml
+from my_code.code.utilite import get_slow_query, read_graphml, safe_path, safe_str
 
 
 def get_dict_for_algos(stop_times: List[StopTime], dict_id_by_name : dict[str, int]) -> dict[tuple[str, str], list[tuple[str, str]]]:
@@ -44,16 +44,6 @@ def get_dict_for_algos(stop_times: List[StopTime], dict_id_by_name : dict[str, i
             d[(id_start, id_end)].append((start_time, end_time))
     return d
 
-_INVALID_CHARS = re.compile(r'[\\/*?:"<>|]')
-
-def safe_path(path: str) -> Path:
-    p = Path(path)
-
-    # очищаем только имя файла, не трогая директории
-    safe_name = _INVALID_CHARS.sub('  ', p.name)
-
-    return p.with_name(safe_name)
-
 def write_dict_subroute(path: str, dict_id_by_name : dict[tuple[str, str], list[tuple[str, str]]]) -> None:
     safe_p = safe_path(path)
     with open(safe_p, 'w+', encoding='utf-8') as f:
@@ -81,7 +71,8 @@ def load_all_routes_with_coordinates_and_time(base_url, name_city, path_file_cit
                 corrected_time_route = get_normalized_route(dict_distance, sub_route_time.time_stops)
                 d = get_dict_for_algos(corrected_time_route, dict_id_by_name)
 
-                path_name_file = f"../transport/result/{name_city}/{sub_route_time.name}.txt"
+                name_sub_route = safe_str(sub_route_time.name)
+                path_name_file = f"../transport/result/{name_city}/{name_sub_route}.txt"
                 write_dict_subroute(path_name_file, d)
 
             set_process_source(name_city, url)

@@ -1,11 +1,9 @@
-from datetime import datetime
 from collections import Counter
 from typing import List
 
 import numpy as np
 
-from my_code.code.algos.transport_routes import TransportRoute, TransportRoutes
-from my_code.code.transport.classes import StopTime, RouteCoordinates, SubRouteTimes, Stop
+from my_code.code.transport.classes import StopTime, RouteCoordinates
 from my_code.code.utilite import get_time_in_min, haversine, get_str_time
 
 

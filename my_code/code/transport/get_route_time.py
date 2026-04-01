@@ -4,7 +4,7 @@ from typing import List
 from bs4 import BeautifulSoup
 
 from my_code.code.transport.classes import Route, RouteTimes, SubRouteTimes, StopTime
-from my_code.code.utilite import get_slow_query, get_time
+from my_code.code.utilite import get_slow_query, get_time, safe_str
 
 
 def get_route_times_by_soup(name_route: str, soup : BeautifulSoup, name : str) -> SubRouteTimes:
@@ -16,7 +16,7 @@ def get_route_times_by_soup(name_route: str, soup : BeautifulSoup, name : str) -
         name_stop = name_stop_content[name_stop_content.find(')') + 1:].strip()
         stop_time = process_time(name_stop, stop, name)
         stop_times.append(stop_time)
-    return SubRouteTimes(name_route, stop_times)
+    return SubRouteTimes(safe_str(name_route), stop_times)
 
 def process_time(name_stop, soup_row, name) -> StopTime:
     interval_time = soup_row.find(class_='interval-times')
