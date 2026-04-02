@@ -14,7 +14,7 @@ from my_code.code.transport.get_all_names_route_and_ref import get_all_names_rou
 from my_code.code.transport.get_route_time import get_route_times, get_cashed_route_times
 from my_code.code.transport.get_stops_with_coordinates import get_cashed_stops_with_coordinates
 from my_code.code.transport.getter_coordinates_in_graph import get_dict_id_in_graph_by_name_stop
-from my_code.code.utilite import get_slow_query, read_graphml, safe_path, safe_str
+from my_code.code.utilite import get_slow_query, read_graphml, safe_path, safe_str, norm
 
 
 def get_dict_for_algos(stop_times: List[StopTime], dict_id_by_name : dict[str, int]) -> dict[tuple[str, str], list[tuple[str, str]]]:
@@ -23,14 +23,14 @@ def get_dict_for_algos(stop_times: List[StopTime], dict_id_by_name : dict[str, i
     for i in range(0, len(stop_times) - 1):
         stop_time_start = stop_times[i]
         start_times = stop_time_start.time
-        start_name = stop_time_start.stop_name.title()
+        start_name = norm(stop_time_start.stop_name)
         if start_name not in dict_id_by_name:
             continue
         id_start = dict_id_by_name[start_name]
 
         stop_time_end = stop_times[i + 1]
         end_times = stop_time_end.time
-        end_name = stop_time_end.stop_name.title()
+        end_name = norm(stop_time_end.stop_name.title())
         if end_name not in dict_id_by_name:
             continue
         id_end = dict_id_by_name[end_name]

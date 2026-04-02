@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from my_code.code.algos.h3_helper.h3_index import H3Index
 from my_code.code.getter_city_data.getter_nk_graph import nx_to_nk_with_extra
 from my_code.code.transport.classes import Stop, Point
-from my_code.code.utilite import get_slow_query, read_graphml, haversine
+from my_code.code.utilite import get_slow_query, read_graphml, haversine, norm
 
 index = None
 
@@ -35,7 +35,7 @@ def get_id_dict_for_file(d : dict[str, Point], index : H3Index) -> dict[str, int
     for name, point in d.items():
         found_nearest = index.nearest(point.lat, point.lon)
         if found_nearest is not None:
-            result[name.title()] = found_nearest
+            result[norm(name)] = found_nearest
     return result
 
 def get_dict_id_in_graph_by_name_stop(stops: List[Stop], index : H3Index) -> dict[str, int]:

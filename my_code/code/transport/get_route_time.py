@@ -77,6 +77,7 @@ def get_route_times(name, url) -> RouteTimes:
     urls_object = l_start.find_all('a')
     url_routes = []
     name_routes = []
+    have_route_with_times = False
     for obj in urls_object:
         alpha_route = str(obj.get('href')).split('/')[-1]
         url_route = url + '/' + alpha_route
@@ -84,12 +85,24 @@ def get_route_times(name, url) -> RouteTimes:
         name_sub_route = name_sub_route[name_sub_route.find(')') + 1:].strip()
         name_routes.append(name + ': ' + name_sub_route)
         url_routes.append(url_route)
-    sub_route_times = [get_route_times_by_soup(name_routes[0], s_start, name)]
+    sub_route_times = []
+    try:
+        sub_route_times = [get_route_times_by_soup(name_routes[0], s_start, name)]
+        have_route_with_times = True
+    except Exception as e:
+        print(f'Не нашли время для маршрута {name_routes[0]} или не смогли его обработать : {e}')
+
     for i in range(len(url_routes)):
         if url_routes[i] == start_url:
             continue
         soup = get_slow_query(url_routes[i], 15)
-        sub_route_times.append(get_route_times_by_soup(name_routes[i], soup, name))
+        try:
+            sub_route_times.append(get_route_times_by_soup(name_routes[i], soup, name))
+            have_route_with_times = True
+        except Exception as e:
+            print(f'Не нашли время для маршрута {name_routes[i]} или не смогли его обработать : {e}')
+    if not have_route_with_times:
+        raise Exception(f'Не нашли времени в маршрутах с названием {name}')
     return RouteTimes(name, sub_route_times)
 
 def get_cashed_route_times(name_city, name, ref) -> RouteTimes:

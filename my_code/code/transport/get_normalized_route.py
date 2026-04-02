@@ -4,8 +4,7 @@ from typing import List
 import numpy as np
 
 from my_code.code.transport.classes import StopTime, RouteCoordinates
-from my_code.code.utilite import get_time_in_min, haversine, get_str_time
-
+from my_code.code.utilite import get_time_in_min, haversine, get_str_time, norm
 
 
 def get_normalized_route(dict_distance: dict[tuple[str, str], float], stop_times : List[StopTime]) -> List[StopTime]:
@@ -81,7 +80,7 @@ def get_dict_distance(route_coordinates : RouteCoordinates) -> dict[tuple[str, s
         stop_start = route_coordinates.stops[stop_start_i]
         stop_end = route_coordinates.stops[stop_end_i]
         distance = haversine((stop_start.lat, stop_start.lon), (stop_end.lat, stop_end.lon))
-        d_distance[(stop_start.name.title(), stop_end.name.title())] = 1.2 * distance
+        d_distance[(norm(stop_start.name), norm(stop_end.name))] = 1.2 * distance
     return d_distance
 def matrix_stop_times_norm(stop_times : list[StopTime]) -> np.ndarray:
     result = []
@@ -137,6 +136,6 @@ def get_final_distance_between_stops(index_1, index_2, stop_times : list[StopTim
     need_times = stop_times[min_index:max_index+1]
     distance = 0
     for stop_time_start, stop_time_end in zip(need_times[:-2], need_times[1:]):
-        distance += dict_distance[(stop_time_start.stop_name.title(), stop_time_end.stop_name.title())]
+        distance += dict_distance[(norm(stop_time_start.stop_name), norm(stop_time_end.stop_name))]
     return distance
 

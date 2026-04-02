@@ -36,6 +36,10 @@ _INVALID_CHARS = re.compile(r'[\\/*?:"<>|]')
 def safe_str(s: str) -> str:
     return _INVALID_CHARS.sub(' ', s)
 
+def norm(s : str) -> str:
+    return s.title().replace(" ", "").replace("–", "-")
+
+
 def safe_path(path: str) -> Path:
     p = Path(path)
 

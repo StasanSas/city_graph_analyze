@@ -23,7 +23,7 @@ class DataArrival:
 class TransportRoute:
     def __init__(self, id, name, d : dict[DataArrival, DataArrival]):
         self.id = id
-        
+        self.name = name
         self.my_stops = set()
         self.init_stops(d)
         
