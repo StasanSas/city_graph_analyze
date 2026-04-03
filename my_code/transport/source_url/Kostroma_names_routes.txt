@@ -1,67 +1,64 @@
-Автобус 1	https://kudikina.ru/kostr/bus/1
-Автобус 2	https://kudikina.ru/kostr/bus/2
-Автобус 3	https://kudikina.ru/kostr/bus/3
-Автобус 4	https://kudikina.ru/kostr/bus/4
-Автобус 5	https://kudikina.ru/kostr/bus/5
-Автобус 7	https://kudikina.ru/kostr/bus/7
-Автобус 8	https://kudikina.ru/kostr/bus/8
-Автобус 13	https://kudikina.ru/kostr/bus/13
-Автобус 14	https://kudikina.ru/kostr/bus/14
-Автобус 15	https://kudikina.ru/kostr/bus/15
-Автобус 16	https://kudikina.ru/kostr/bus/16
-Автобус 17	https://kudikina.ru/kostr/bus/17
-Автобус 18	https://kudikina.ru/kostr/bus/18
-Автобус 18к	https://kudikina.ru/kostr/bus/18k
-Автобус 21	https://kudikina.ru/kostr/bus/21
-Автобус 21к	https://kudikina.ru/kostr/bus/21k
-Автобус 22	https://kudikina.ru/kostr/bus/22
-Автобус 26	https://kudikina.ru/kostr/bus/26
-Автобус 27	https://kudikina.ru/kostr/bus/27
-Автобус 39	https://kudikina.ru/kostr/bus/39
-Автобус 52	https://kudikina.ru/kostr/bus/52
-Автобус 57	https://kudikina.ru/kostr/bus/57
-Автобус 65	https://kudikina.ru/kostr/bus/65
-Автобус 66	https://kudikina.ru/kostr/bus/66
-Автобус 75	https://kudikina.ru/kostr/bus/75
-Автобус 76	https://kudikina.ru/kostr/bus/76
-Автобус 83	https://kudikina.ru/kostr/bus/83
-Автобус 93	https://kudikina.ru/kostr/bus/93
-Автобус 94	https://kudikina.ru/kostr/bus/94
-Автобус 101	https://kudikina.ru/kostr/bus/101
-Автобус 104	https://kudikina.ru/kostr/bus/104
-Автобус 105	https://kudikina.ru/kostr/bus/105
-Автобус 106	https://kudikina.ru/kostr/bus/106
-Автобус 107	https://kudikina.ru/kostr/bus/107
-Автобус 108	https://kudikina.ru/kostr/bus/108
-Автобус 109	https://kudikina.ru/kostr/bus/109
-Автобус 110	https://kudikina.ru/kostr/bus/110
-Автобус 112	https://kudikina.ru/kostr/bus/112
-Автобус 113	https://kudikina.ru/kostr/bus/113
-Автобус 114	https://kudikina.ru/kostr/bus/114
-Автобус 115	https://kudikina.ru/kostr/bus/115
-Автобус 117	https://kudikina.ru/kostr/bus/117
-Автобус 118	https://kudikina.ru/kostr/bus/118
-Автобус 120	https://kudikina.ru/kostr/bus/120
-Автобус 124	https://kudikina.ru/kostr/bus/124
-Автобус 126	https://kudikina.ru/kostr/bus/126
-Автобус 127	https://kudikina.ru/kostr/bus/127
-Автобус 128	https://kudikina.ru/kostr/bus/128
-Автобус 129	https://kudikina.ru/kostr/bus/129
-Автобус 130	https://kudikina.ru/kostr/bus/130
-Автобус 131	https://kudikina.ru/kostr/bus/131
-Автобус 132	https://kudikina.ru/kostr/bus/132
-Автобус 133	https://kudikina.ru/kostr/bus/133
-Автобус 134	https://kudikina.ru/kostr/bus/134
-Автобус 139	https://kudikina.ru/kostr/bus/139
-Автобус 140	https://kudikina.ru/kostr/bus/140
-Автобус 141	https://kudikina.ru/kostr/bus/141
-Автобус 147	https://kudikina.ru/kostr/bus/147
-Автобус 160	https://kudikina.ru/kostr/bus/160
-Автобус 200	https://kudikina.ru/kostr/bus/200
-Автобус 211	https://kudikina.ru/kostr/bus/211
-Автобус 390	https://kudikina.ru/kostr/bus/390
-Автобус 395	https://kudikina.ru/kostr/bus/395
-Маршрутка 11	https://kudikina.ru/kostr/mtaxi/11
-Маршрутка 49	https://kudikina.ru/kostr/mtaxi/49
-Маршрутка 77	https://kudikina.ru/kostr/mtaxi/77
-Маршрутка 100	https://kudikina.ru/kostr/mtaxi/100
+Автобус 1	https://kudikina.ru/kostr/bus/1	processed
+Автобус 2	https://kudikina.ru/kostr/bus/2	processed
+Автобус 3	https://kudikina.ru/kostr/bus/3	processed
+Автобус 4	https://kudikina.ru/kostr/bus/4	processed
+Автобус 5	https://kudikina.ru/kostr/bus/5	processed
+Автобус 7	https://kudikina.ru/kostr/bus/7	processed
+Автобус 8	https://kudikina.ru/kostr/bus/8	processed
+Автобус 13	https://kudikina.ru/kostr/bus/13	processed
+Автобус 14	https://kudikina.ru/kostr/bus/14	processed
+Автобус 15	https://kudikina.ru/kostr/bus/15	processed
+Автобус 16	https://kudikina.ru/kostr/bus/16	processed
+Автобус 17	https://kudikina.ru/kostr/bus/17	processed
+Автобус 18	https://kudikina.ru/kostr/bus/18	processed
+Автобус 18к	https://kudikina.ru/kostr/bus/18k	processed
+Автобус 21	https://kudikina.ru/kostr/bus/21	processed
+Автобус 22	https://kudikina.ru/kostr/bus/22	processed
+Автобус 26	https://kudikina.ru/kostr/bus/26	processed
+Автобус 27	https://kudikina.ru/kostr/bus/27	processed
+Автобус 39	https://kudikina.ru/kostr/bus/39	processed
+Автобус 52	https://kudikina.ru/kostr/bus/52	processed
+Автобус 57	https://kudikina.ru/kostr/bus/57	processed
+Автобус 65	https://kudikina.ru/kostr/bus/65	processed
+Автобус 66	https://kudikina.ru/kostr/bus/66	processed
+Автобус 75	https://kudikina.ru/kostr/bus/75	processed
+Автобус 76	https://kudikina.ru/kostr/bus/76	processed
+Автобус 83	https://kudikina.ru/kostr/bus/83	processed
+Автобус 93	https://kudikina.ru/kostr/bus/93	processed
+Автобус 94	https://kudikina.ru/kostr/bus/94	processed
+Автобус 101	https://kudikina.ru/kostr/bus/101	processed
+Автобус 104	https://kudikina.ru/kostr/bus/104	processed
+Автобус 105	https://kudikina.ru/kostr/bus/105	processed
+Автобус 106	https://kudikina.ru/kostr/bus/106	processed
+Автобус 107	https://kudikina.ru/kostr/bus/107	processed
+Автобус 108	https://kudikina.ru/kostr/bus/108	processed
+Автобус 109	https://kudikina.ru/kostr/bus/109	processed
+Автобус 110	https://kudikina.ru/kostr/bus/110	processed
+Автобус 112	https://kudikina.ru/kostr/bus/112	processed
+Автобус 114	https://kudikina.ru/kostr/bus/114	processed
+Автобус 115	https://kudikina.ru/kostr/bus/115	processed
+Автобус 117	https://kudikina.ru/kostr/bus/117	processed
+Автобус 118	https://kudikina.ru/kostr/bus/118	processed
+Автобус 120	https://kudikina.ru/kostr/bus/120	processed
+Автобус 124	https://kudikina.ru/kostr/bus/124	processed
+Автобус 126	https://kudikina.ru/kostr/bus/126	processed
+Автобус 127	https://kudikina.ru/kostr/bus/127	processed
+Автобус 128	https://kudikina.ru/kostr/bus/128	processed
+Автобус 129	https://kudikina.ru/kostr/bus/129	processed
+Автобус 130	https://kudikina.ru/kostr/bus/130	processed
+Автобус 131	https://kudikina.ru/kostr/bus/131	processed
+Автобус 132	https://kudikina.ru/kostr/bus/132	processed
+Автобус 133	https://kudikina.ru/kostr/bus/133	processed
+Автобус 134	https://kudikina.ru/kostr/bus/134	processed
+Автобус 139	https://kudikina.ru/kostr/bus/139	processed
+Автобус 140	https://kudikina.ru/kostr/bus/140	processed
+Автобус 141	https://kudikina.ru/kostr/bus/141	processed
+Автобус 147	https://kudikina.ru/kostr/bus/147	processed
+Автобус 160	https://kudikina.ru/kostr/bus/160	processed
+Автобус 200	https://kudikina.ru/kostr/bus/200	processed
+Автобус 390	https://kudikina.ru/kostr/bus/390	processed
+Автобус 395	https://kudikina.ru/kostr/bus/395	processed
+Маршрутка 11	https://kudikina.ru/kostr/mtaxi/11	processed
+Маршрутка 49	https://kudikina.ru/kostr/mtaxi/49	processed
+Маршрутка 77	https://kudikina.ru/kostr/mtaxi/77	processed
+Маршрутка 100	https://kudikina.ru/kostr/mtaxi/100	processed

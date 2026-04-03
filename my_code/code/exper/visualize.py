@@ -115,7 +115,8 @@ def visualize_clusters_on_map(graph,
 
     def random_color():
         return "#{:06x}".format(random.randint(0, 0xFFFFFF))
-
+    c_cluster = 0
+    c_nodes = 0
     for cluster in clusters:
 
         if not cluster.nodes:
@@ -125,6 +126,9 @@ def visualize_clusters_on_map(graph,
 
         # --- центр ---
         center_latlon = get_node_coords(cluster.center)
+        lat, lon = center_latlon
+        if not (lat_min <= lat <= lat_max and lon_min <= lon <= lon_max):
+            continue
 
         folium.CircleMarker(
             location=center_latlon,
@@ -134,6 +138,8 @@ def visualize_clusters_on_map(graph,
             fill_opacity=1,
             weight=2
         ).add_to(m)
+        c_cluster += 1
+        c_nodes += 1
 
         # --- ноды ---
         for node in cluster.nodes:
@@ -142,7 +148,7 @@ def visualize_clusters_on_map(graph,
 
             if not (lat_min <= lat <= lat_max and lon_min <= lon <= lon_max):
                 continue
-
+            c_nodes += 1
             folium.CircleMarker(
                 location=(lat, lon),
                 radius=3,
@@ -162,7 +168,7 @@ def visualize_clusters_on_map(graph,
                 ).add_to(m)
 
     m.save(output_file)
-    print("clusters saved:", output_file)
+    print(f"clusters saved: {output_file}\nКол-во кластеров: {c_cluster}\nКол-во вершин: {c_nodes}")
 
     return output_file
 
@@ -183,9 +189,9 @@ def find_and_visualize_area(graph, center_lat, center_lon, radius_km=0.9):
     lat_min, lat_max, lon_min, lon_max = get_sizes_for_draw(center_lat, center_lon, radius_km)
     return visualize_graph_on_map(graph, lat_min, lat_max, lon_min, lon_max, output_file=f"area_{radius_km}km.html")
 
-def find_and_visualize_clusters_in_ares(graph, clusters : list[Cluster], center_lat, center_lon, size_cluster, radius_km=0.9):
+def find_and_visualize_clusters_in_ares(graph, clusters : list[Cluster], center_lat, center_lon, size_cluster, name_city, radius_km=0.9):
     lat_min, lat_max, lon_min, lon_max = get_sizes_for_draw(center_lat, center_lon, radius_km)
-    return visualize_clusters_on_map(graph, clusters, lat_min, lat_max, lon_min, lon_max, output_file=f"size_{size_cluster}_area_{radius_km}km.html")
+    return visualize_clusters_on_map(graph, clusters, lat_min, lat_max, lon_min, lon_max, output_file=f"size_{size_cluster}_area_{name_city}_{radius_km}km.html")
 # Пример использования:
 def main():
     from old_code.Handler import OSMHandler

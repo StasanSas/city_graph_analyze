@@ -1,12 +1,15 @@
-﻿from typing import Any
+﻿from bisect import bisect_left
+from typing import Any
 
-from datetime import datetime, timezone
+from datetime import time, timezone
+
+from my_code.code.utilite import time_to_seconds
 
 
 class DataArrival:
-    def __init__(self, id_node : int, arrival_time : datetime):
+    def __init__(self, id_node : int, arrival_time : float):
         self.id_node = id_node
-        self.arrival_time = arrival_time
+        self.arrival_time = arrival_time # время в секундах с момента начала дня
 
     def __hash__(self) -> int:
         return hash((self.id_node, self.arrival_time))
@@ -17,7 +20,7 @@ class DataArrival:
         return (self.id_node, self.arrival_time) == (other.id_node, other.arrival_time)
 
     def __repr__(self):
-        return f" {self.id_node} | {self.arrival_time.time()} "
+        return f" {self.id_node} | {self.arrival_time} "
 
 
 class TransportRoute:
@@ -30,7 +33,7 @@ class TransportRoute:
         self.next_stops = d
         
         self.d_datetime_for_stop_by_id_stop = {}
-        self.init_d_datetime(d)
+        self.init_d_datetime_to_seconds(d)
         
         
     def init_stops(self, d : dict[DataArrival, DataArrival]):
@@ -38,7 +41,7 @@ class TransportRoute:
             self.my_stops.add(stop_start.id_node)
             self.my_stops.add(stop_end.id_node)
             
-    def init_d_datetime(self, d : dict[DataArrival, DataArrival]):
+    def init_d_datetime_to_seconds(self, d : dict[DataArrival, DataArrival]):
         node_ids = set()
         for stop_start in d.keys():
             if stop_start.id_node not in self.d_datetime_for_stop_by_id_stop:
@@ -55,11 +58,10 @@ class TransportRoute:
         return v in self.my_stops
 
     def get_nearest_datetime_for_stop(self, currentDataStateStop : DataArrival) -> DataArrival | None:
-        l = self.d_datetime_for_stop_by_id_stop[currentDataStateStop.id_node]
-        for time in l:
-            if time < currentDataStateStop.arrival_time:
-                continue
-            return time
+        times = self.d_datetime_for_stop_by_id_stop[currentDataStateStop.id_node]
+        i = bisect_left(times, currentDataStateStop.arrival_time)
+        if i < len(times):
+            return times[i]
         return None
 
     def get_next_stop_data(self, current_stop_data : DataArrival) -> DataArrival:
@@ -111,37 +113,45 @@ class TransportRoutes:
         return result
 
 
+def get_smaller_d_data_time_arrival(d_old : dict[DataArrival, DataArrival], start : float = 0.0) -> TransportRoutes:
+    r = []
+    for route in routes:
+        new_d = {}
+        for id_node in route.my_stops:
+            pass
+
+
 
 if __name__ == "__main__":
     d_1 = {}
-    s_1__24_00 = DataArrival(1, datetime(2025, 12, 31, 23, 24, 0, tzinfo=timezone.utc))
-    s_2__25_00 = DataArrival(2, datetime(2025, 12, 31, 23, 25, 0, tzinfo=timezone.utc))
+    s_1__24_00 = DataArrival(1, time_to_seconds(time(0, 24, 0)))
+    s_2__25_00 = DataArrival(2, time_to_seconds(time(0, 25, 0)))
     d_1[s_1__24_00] = s_2__25_00
 
-    s_3__25_30 = DataArrival(3, datetime(2025, 12, 31, 23, 25, 30, tzinfo=timezone.utc))
+    s_3__25_30 = DataArrival(3, time_to_seconds(time(0, 25, 30)))
     d_1[s_2__25_00] = s_3__25_30
 
-    s_1__27_00 = DataArrival(1, datetime(2025, 12, 31, 23, 27, 00, tzinfo=timezone.utc))
+    s_1__27_00 = DataArrival(1, time_to_seconds(time(0, 27, 00)))
     d_1[s_3__25_30] = s_1__27_00
 
-    s_2__25_00_new = DataArrival(2, datetime(2025, 12, 31, 23, 28, 0, tzinfo=timezone.utc))
+    s_2__25_00_new = DataArrival(2, time_to_seconds(time(0, 28, 0)))
     d_1[s_1__27_00] = s_2__25_00_new
 
     d_2 = {}
-    s_4__26_00 = DataArrival(4, datetime(2025, 12, 31, 23, 26, 00, tzinfo=timezone.utc))
+    s_4__26_00 = DataArrival(4, time_to_seconds(time(0, 26, 00)))
     d_2[s_2__25_00] = s_4__26_00
 
-    s_5__26_30 = DataArrival(5, datetime(2025, 12, 31, 23, 26, 30, tzinfo=timezone.utc))
+    s_5__26_30 = DataArrival(5, time_to_seconds(time(0, 26, 30)))
     d_2[s_4__26_00] = s_5__26_30
 
-    s_2__28_00 = DataArrival(2, datetime(2025, 12, 31, 23, 28, 00, tzinfo=timezone.utc))
+    s_2__28_00 = DataArrival(2, time_to_seconds(time(0, 28, 00)))
     d_2[s_2__28_00] = s_2__28_00
 
-    s_4__26_00 = DataArrival(4, datetime(2025, 12, 31, 23, 29, 00, tzinfo=timezone.utc))
+    s_4__26_00 = DataArrival(4, time_to_seconds(time(0, 29, 00)))
     d_1[s_1__27_00] = s_4__26_00
     
-    route_1 = TransportRoute(1, d_1)
-    route_2 = TransportRoute(2, d_2)
+    route_1 = TransportRoute(1, "Чикибамбоники - Рыбинск", d_1)
+    route_2 = TransportRoute(2, "Чебоксары - Стерлитомак", d_2)
     
     routes = TransportRoutes([route_1, route_2])
 
@@ -149,15 +159,15 @@ if __name__ == "__main__":
     print(routes.is_stop(1))
     print(routes.is_stop(1))
     print(routes.get_nearest_routes_for_stop(
-        DataArrival(2, datetime(2025, 12, 31, 23, 26, 0, tzinfo=timezone.utc)))
+        DataArrival(2, time_to_seconds(time(0, 26, 0))))
     )
 
     print(routes.get_nearest_routes_for_stop(
-        DataArrival(1, datetime(2025, 12, 31, 23, 23, 0, tzinfo=timezone.utc)))
+        DataArrival(1, time_to_seconds(time(0, 0, 0))))
     )
 
     print(routes.get_nearest_routes_for_stop(
-        DataArrival(1, datetime(2025, 12, 31, 23, 25, 0, tzinfo=timezone.utc)))
+        DataArrival(1, time_to_seconds(time(0, 25, 0))))
     )
     
     

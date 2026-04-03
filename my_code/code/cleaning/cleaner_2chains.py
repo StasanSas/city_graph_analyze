@@ -1,13 +1,13 @@
 import networkx as nx
 
-from my_code.code.cleaning.abstract_cleaner import CleanerGraph
+from my_code.code.cleaning.abstract_cleaner import ConverterGraph
 
 
-class Cleaner2Chains(CleanerGraph):
+class Converter2Chains(ConverterGraph):
     def __init__(self, *args, **kwargs):
-        super(Cleaner2Chains, self).__init__(*args, **kwargs)
+        super(Converter2Chains, self).__init__(*args, **kwargs)
 
-    def get_clean_graph(self, graph: nx.graph, coordinates_data) -> nx.graph:
+    def get_converted_graph(self, graph: nx.graph, coordinates_data) -> nx.graph:
         n = graph.numberOfNodes()
 
         deg = [graph.degree(u) for u in graph.iterNodes()]

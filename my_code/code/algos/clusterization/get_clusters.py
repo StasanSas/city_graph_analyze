@@ -11,7 +11,7 @@ import networkit as nk
 import networkit.distance
 
 
-def get_clusters(part_path_input : str, size_d : float, have_clusters = False) -> ResultClusterization:
+def get_clusters(part_path_input : str, size_d : float, have_clusters = True) -> ResultClusterization:
         graph = read_graphml(part_path_input)
         graph_nk, coordinates_data = nx_to_nk_with_extra(graph)
         h3_resolution = get_h3_resolution_for_current_size(8 * size_d)

@@ -34,10 +34,10 @@ driver = None
 
 _INVALID_CHARS = re.compile(r'[\\/*?:"<>|]')
 def safe_str(s: str) -> str:
-    return _INVALID_CHARS.sub(' ', s)
+    return _INVALID_CHARS.sub(' ', s).replace("–", "-").replace("—", "-")
 
 def norm(s : str) -> str:
-    return s.title().replace(" ", "").replace("–", "-")
+    return s.title().replace(" ", "").replace("–", "-").replace("—", "-")
 
 
 def safe_path(path: str) -> Path:
@@ -62,6 +62,9 @@ def delete_empty_files(directory):
 
     print(f"Удалено пустых файлов: {deleted_count}")
     return deleted_count
+
+def time_to_seconds(t: time) -> int:
+    return t.hour * 3600 + t.minute * 60 + t.second
 
 def get_node_by_coords(value, graph):
     sorted_nodes = graph.get_sorted_nodes()
@@ -96,6 +99,13 @@ def get_time_in_min(s):
         return int(split_str[0]) * 60 + int(split_str[1])
     if len(split_str) == 3:
         return int(split_str[0]) * 60 + int(split_str[1]) * 60 + int(split_str[2]) / 60
+
+def get_time_in_sec(s):
+    split_str = s.split(':')
+    if len(split_str) == 2:
+        return int(split_str[0]) * 3600 + int(split_str[1]) * 60
+    if len(split_str) == 3:
+        return int(split_str[0]) * 3600 + int(split_str[1]) * 60 + int(split_str[2])
 
 def get_str_time(current_time):
     total_seconds = int(current_time * 60)  # минуты → секунды

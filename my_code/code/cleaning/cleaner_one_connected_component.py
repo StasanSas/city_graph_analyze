@@ -2,15 +2,15 @@ import networkit as nk
 
 from my_code.code.algos.coorsinates_helper.center import get_center
 from my_code.code.algos.h3_helper.h3_index import H3Index
-from my_code.code.cleaning.abstract_cleaner import CleanerGraph
+from my_code.code.cleaning.abstract_cleaner import ConverterGraph
 
 
-class CleanerConnectedComponents(CleanerGraph):
+class ConverterConnectedComponents(ConverterGraph):
     def __init__(self, *args, **kwargs):
-        super(CleanerConnectedComponents, self).__init__(*args, **kwargs)
+        super(ConverterConnectedComponents, self).__init__(*args, **kwargs)
 
 
-    def get_clean_graph(self, graph : nk.Graph, coordinates_data) -> nk.Graph:
+    def get_converted_graph(self, graph : nk.Graph, coordinates_data) -> nk.Graph:
         index = H3Index(coordinates_data)
 
         # Находим компоненты связности

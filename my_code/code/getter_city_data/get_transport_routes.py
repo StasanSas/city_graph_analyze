@@ -1,21 +1,15 @@
 ﻿import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 
 from my_code.code.algos.transport_routes.transport_routes import TransportRoute, DataArrival
-from my_code.code.utilite import get_time_in_min
+from my_code.code.utilite import get_time_in_min, get_time_in_sec
 
 
-def parse_tuple(tup : str) -> (datetime, datetime):
+def parse_tuple(tup : str) -> (float, float):
     s_time_str, e_time_str = tup.split(',')
-    time_s = get_time_in_min(s_time_str)
-    time_e = get_time_in_min(e_time_str)
-
-    date_time_s = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) \
-         + timedelta(minutes=time_s)
-
-    date_time_e = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) \
-         + timedelta(minutes=time_e)
-    return date_time_s, date_time_e
+    time_s = get_time_in_sec(s_time_str)
+    time_e = get_time_in_sec(e_time_str)
+    return time_s, time_e
 
 
 def get_transport_routes(name_city) -> list[TransportRoute]:
