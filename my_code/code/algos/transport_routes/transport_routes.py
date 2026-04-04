@@ -113,13 +113,6 @@ class TransportRoutes:
         return result
 
 
-def get_smaller_d_data_time_arrival(d_old : dict[DataArrival, DataArrival], start : float = 0.0) -> TransportRoutes:
-    r = []
-    for route in routes:
-        new_d = {}
-        for id_node in route.my_stops:
-            pass
-
 
 
 if __name__ == "__main__":

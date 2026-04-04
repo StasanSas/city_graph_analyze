@@ -1,16 +1,11 @@
 import networkit as nk
-
-from my_code.code.algos.coorsinates_helper.center import get_center
 from my_code.code.algos.h3_helper.h3_index import H3Index
-from my_code.code.cleaning.abstract_cleaner import ConverterGraph
+from my_code.code.convertors_graph.abstract_cleaner import ConverterGraph
 
 
 class ConverterConnectedComponents(ConverterGraph):
-    def __init__(self, *args, **kwargs):
-        super(ConverterConnectedComponents, self).__init__(*args, **kwargs)
 
-
-    def get_converted_graph(self, graph : nk.Graph, coordinates_data) -> nk.Graph:
+    def get_converted_graph(self, graph : nk.Graph, coordinates_data : dict[int, dict[str, float]]) -> nk.Graph:
         index = H3Index(coordinates_data)
 
         # Находим компоненты связности

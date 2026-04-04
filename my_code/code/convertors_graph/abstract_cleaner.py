@@ -8,8 +8,6 @@ from my_code.code.utilite import read_graphml, write_graphml
 
 
 class ConverterGraph():
-    def __init__(self, *args, **kwargs):
-        super(ConverterGraph, self).__init__(*args, **kwargs)
 
     def get_converted_graph_nx(self, graph : nx.Graph) -> nx.Graph:
         """Очистка графа nx"""

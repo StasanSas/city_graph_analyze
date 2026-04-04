@@ -14,3 +14,8 @@ class DijkstraWithTransport():
         # Её нужно создавать с умом, чтобы была связана с графом g.
         pass
 
+
+    # передаём словарь
+    def run(self, starts : list[int]) -> dict[tuple[int, int], float]:
+        pass
+

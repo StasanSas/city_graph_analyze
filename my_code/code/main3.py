@@ -1,7 +1,7 @@
 ﻿import networkx as nx
 
-from my_code.code.cleaning.cleaner_2chains import Converter2Chains
-from my_code.code.cleaning.cleaner_one_connected_component import ConverterConnectedComponents
+from my_code.code.convertors_graph.cleaner_2chains import Converter2Chains
+from my_code.code.convertors_graph.cleaner_one_connected_component import ConverterConnectedComponents
 from my_code.code.exper.calculate_length_edges import main
 from my_code.code.exper.visualize import find_and_visualize_area
 from my_code.code.utilite import read_graphml
