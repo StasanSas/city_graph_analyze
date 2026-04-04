@@ -58,6 +58,8 @@ class TransportRoute:
         return v in self.my_stops
 
     def get_nearest_datetime_for_stop(self, currentDataStateStop : DataArrival) -> DataArrival | None:
+        if currentDataStateStop.id_node not in self.d_datetime_for_stop_by_id_stop:
+            return None
         times = self.d_datetime_for_stop_by_id_stop[currentDataStateStop.id_node]
         i = bisect_left(times, currentDataStateStop.arrival_time)
         if i < len(times):
@@ -72,34 +74,34 @@ class TransportRoute:
 
 class TransportRoutes:
     def __init__(self, routes: list[TransportRoute]):
-        self.all_nodes_stop = set()
-        self.d_route_by_rote_id = {}
-        self.init_d_route_by_route_id(routes)
+        self.__all_nodes_stop = set()
+        self.__d_route_by_rote_id = {}
+        self.__init_d_route_by_route_id(routes)
 
-        self.d_rote_by_node = {}
+        self.__d_rote_by_node = {}
         self.init_d_rote_by_node(routes)
 
-    def init_d_route_by_route_id(self, routes):
+    def __init_d_route_by_route_id(self, routes):
         for route in routes:
-            self.d_route_by_rote_id[route.id] = route
+            self.__d_route_by_rote_id[route.id] = route
 
     def init_d_rote_by_node(self, routes):
         for route in routes:
             for id_node in route.my_stops:
-                if id_node not in self.d_rote_by_node:
-                    self.d_rote_by_node[id_node] = []
-                self.d_rote_by_node[id_node].append(route.id)
-                self.all_nodes_stop.add(id_node)
+                if id_node not in self.__d_rote_by_node:
+                    self.__d_rote_by_node[id_node] = []
+                self.__d_rote_by_node[id_node].append(route.id)
+                self.__all_nodes_stop.add(id_node)
 
 
 
     def is_stop(self, v) -> bool:
-        return v in self.all_nodes_stop
+        return v in self.__all_nodes_stop
 
     def get_nearest_routes_for_stop(self, currentDataStateStop : DataArrival) -> list[DataArrival]:
         result = []
-        for route_id in self.d_rote_by_node[currentDataStateStop.id_node]:
-            route = self.d_route_by_rote_id[route_id]
+        for route_id in self.__d_rote_by_node[currentDataStateStop.id_node]:
+            route = self.__d_route_by_rote_id[route_id]
             nearest_arrival_for_current_route = route.get_nearest_datetime_for_stop(currentDataStateStop)
             if nearest_arrival_for_current_route is None:
                 continue

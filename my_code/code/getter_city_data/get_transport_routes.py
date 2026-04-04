@@ -11,12 +11,14 @@ def parse_tuple(tup : str) -> (float, float):
     time_e = get_time_in_sec(e_time_str)
     return time_s, time_e
 
-def get_smaller_d_data_time_arrival(d_old : dict[DataArrival, DataArrival], start : float = 0.0, duration : float = DEFAULT_DURATION) -> dict[DataArrival, DataArrival]:
+def get_smaller_and_normalized_data_time_arrival(d_old : dict[DataArrival, DataArrival], start : float = 0.0, duration : float = DEFAULT_DURATION) -> dict[DataArrival, DataArrival]:
     end = start + duration
     d_new = {}
     for s, e in d_old.items():
         if start <= s.arrival_time <= end:
-            d_new[s] = e
+            new_s = DataArrival(s.id_node, s.arrival_time - start)
+            new_e = DataArrival(e.id_node, e.arrival_time - start)
+            d_new[new_s] = new_e
     return d_new
 
 
@@ -41,7 +43,7 @@ def get_transport_routes(name_city, start_time = 0.0, duration = DEFAULT_DURATIO
                     s = DataArrival(start_id, date_time_s)
                     e = DataArrival(stop_id, date_time_e)
                     d[s] = e
-        smaller_d = get_smaller_d_data_time_arrival(d, start_time, duration)
+        smaller_d = get_smaller_and_normalized_data_time_arrival(d, start_time, duration)
         route = TransportRoute(i, route_name, smaller_d)
         r.append(route)
     return r

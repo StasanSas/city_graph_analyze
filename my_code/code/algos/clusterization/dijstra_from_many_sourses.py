@@ -6,6 +6,7 @@ import networkit as nk
 from my_code.code.algos.clusterization.Tree import Tree
 
 
+
 def get_dijkstra_trees(graph_iterator : Callable[[int], Iterator[tuple[int, float]]], h3_start : list[int], min_size : float, max_size_coef : float = 4 ) \
         -> Generator[dict[int, Tree]]:
 
@@ -19,7 +20,7 @@ def get_dijkstra_trees(graph_iterator : Callable[[int], Iterator[tuple[int, floa
 
     parent = {} # по ключу вершины хранится откуда пришли
 
-    pq = [(0, id, id) for id in h3_start]
+    pq = [(0.0, id, id) for id in h3_start]
 
 
     while pq:
@@ -64,12 +65,6 @@ def get_dijkstra_trees(graph_iterator : Callable[[int], Iterator[tuple[int, floa
                 del parent[u]
                 heapq.heappush(pq, (distances[(s_other, u)], s_other, u))
         yield result
-
-def getter_neighbors(graph : nk.Graph) -> Callable[[int], Iterator[tuple[int, float]]]:
-    return lambda i : graph.iterNeighborsWeights(i)
-
-def getter_neighbors_test(d : dict[int, list[tuple[int, float]]]) -> Callable[[int], Iterator[tuple[int, float]]]:
-    return lambda i : iter(d[i]) if i in d else iter(())
 
 def get_trees_with_edges(graph_iterator : Callable[[int], Iterator[tuple[int, float]]],
                          trees :dict[int, Tree]) -> dict[int, Tree]:
@@ -119,6 +114,11 @@ d_test_graph = {
         15 : [(13,1)],
         16 : [(13,1)],
     }
+
+
+
+def getter_neighbors_test(d : dict[int, list[tuple[int, float]]]) -> Callable[[int], Iterator[tuple[int, float]]]:
+    return lambda i : iter(d[i]) if i in d else iter(())
 
 if __name__ == '__main__':
 
