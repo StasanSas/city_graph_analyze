@@ -9,73 +9,103 @@ class StatisticAbstract:
         pass
 
 class StatisticMean(StatisticAbstract):
-    __s : float
-    __n : int
+    s : float
+    n : int
 
     def __init__(self):
-        self.__s = 0
-        self.__n = 0
+        self.s = 0
+        self.n = 0
 
     def process(self, stat : dict[tuple[int, int], float]) -> None:
         for key, value in stat.items():
-            self.__s += value
-            self.__n += 1
+            self.s += value
+            self.n += 1
 
     def get_mean(self) -> float:
-        return self.__s / self.__n
+        return self.s / self.n
 
 
 class StatisticPercentel(StatisticAbstract):
-    __sketch: kll_floats_sketch
+    sketch: kll_floats_sketch
 
     def __init__(self, k):
-        self.__sketch = datasketches.kll_floats_sketch(k)
+        self.sketch = datasketches.kll_floats_sketch(k)
+
+    def __getstate__(self):
+        return {'sketch_bytes': self.sketch.serialize()}
+
+    def __setstate__(self, state):
+        self.sketch = kll_floats_sketch.deserialize(state['sketch_bytes'])
 
     def process(self, stat: dict[tuple[int, int], float]) -> None:
         for key, value in stat.items():
-            self.__sketch.update(value)
+            self.sketch.update(value)
 
     def get_percentel(self, rank) -> float:
-        return self.__sketch.get_quantile(rank)
+        return self.sketch.get_quantile(rank)
 
 class StatisticMeansForNodes(StatisticAbstract):
-    __d_means_sum: dict[int, float]
-    __d_means_count: dict[int, float]
+    d_means_sum: dict[int, float]
+    d_means_count: dict[int, float]
 
     def __init__(self):
-        self.__d_means_sum = {}
-        self.__d_means_count = {}
+        self.d_means_sum = {}
+        self.d_means_count = {}
 
     def process(self, stat: dict[tuple[int, int], float]) -> None:
         for key, value in stat.items():
             start, end = key
-            if end not in self.__d_means_sum:
-                self.__d_means_sum[end] = 0
-                self.__d_means_count[end] = 0
-            self.__d_means_sum[end] += value
-            self.__d_means_count[end] += value
+            if end not in self.d_means_sum:
+                self.d_means_sum[end] = 0
+                self.d_means_count[end] = 0
+            self.d_means_sum[end] += value
+            self.d_means_count[end] += value
 
     def get_mean(self, node_id) -> float:
-        return self.__d_means_sum[node_id] / self.__d_means_count[node_id]
+        return self.d_means_sum[node_id] / self.d_means_count[node_id]
 
 
 class StatisticPercentelForNodes(StatisticAbstract):
-    __d_kll_floats_sketch: dict[int, kll_floats_sketch]
-    __k : int
+    d_kll_floats_sketch: dict[int, kll_floats_sketch]
+    k : int
 
     def __init__(self, k):
-        self.__d_kll_floats_sketch = {}
-        self.__k = k
+        self.d_kll_floats_sketch = {}
+        self.k = k
 
     def process(self, stat: dict[int, list[float]]) -> None:
         for key, value in stat.items():
             start, end = key
-            if end not in self.__d_kll_floats_sketch:
-                self.__d_kll_floats_sketch[end] = datasketches.kll_floats_sketch(self.__k)
-            self.__d_kll_floats_sketch[end].update(value)
+            if end not in self.d_kll_floats_sketch:
+                self.d_kll_floats_sketch[end] = datasketches.kll_floats_sketch(self.k)
+            self.d_kll_floats_sketch[end].update(value)
 
     def get_percentel(self, node_id, rank) -> float:
-        return self.__d_kll_floats_sketch[node_id].get_quantile(rank)
+        return self.d_kll_floats_sketch[node_id].get_quantile(rank)
+
+    def __getstate__(self):
+        """Сериализация для передачи между процессами"""
+        # Сериализуем каждый sketch в байты
+        serialized_sketches = {}
+        for node_id, sketch in self.d_kll_floats_sketch.items():
+            serialized_sketches[node_id] = sketch.serialize()
+
+        # Возвращаем состояние в сериализуемом виде
+        state = {
+            'k': self.k,
+            'serialized_sketches': serialized_sketches
+        }
+        return state
+
+    def __setstate__(self, state):
+        """Десериализация после получения в другом процессе"""
+        self.k = state['k']
+        self.d_kll_floats_sketch = {}
+
+        # Восстанавливаем каждый sketch из байтов
+        for node_id, sketch_bytes in state['serialized_sketches'].items():
+            self.d_kll_floats_sketch[node_id] = datasketches.kll_floats_sketch.deserialize(sketch_bytes)
+
 
 class Statistic(StatisticAbstract):
     mean_statistic : StatisticMean
@@ -95,6 +125,8 @@ class Statistic(StatisticAbstract):
         self.parse_arguments(d_arguments)
         pass
 
+
+
     def process(self, stat: dict[tuple[int, int], float]) -> None:
         for key, value in stat.items():
             stat[key] = self.__func(value)
@@ -112,30 +144,49 @@ class Statistic(StatisticAbstract):
 
     def parse_arguments(self, d : dict[str, Any]):
         func_for_process = []
-        l_true = ["true", "True", True]
-        if "mean" in d and d["mean"] in l_true:
+        if "mean" in d and d["mean"]:
             self.mean_statistic = StatisticMean()
             func_for_process.append(self.mean_statistic.process)
 
-        if "percentel" in d and d["percentel"] in l_true:
+        if "percentel" in d and d["percentel"]:
             k = self.get_k(d["percentel_k"]) if "percentel_k" in d else 52_000
             self.statistic_percentel = StatisticPercentel(k)
             func_for_process.append(self.statistic_percentel.process)
 
-        if "mean_for_nodes" in d and d["mean_for_nodes"] in l_true:
+        if "mean_for_nodes" in d and d["mean_for_nodes"]:
             self.statistic_means_for_nodes = StatisticMeansForNodes()
             func_for_process.append(self.statistic_means_for_nodes.process)
 
-        if "percentel_for_nodes" in d and d["percentel_for_nodes"] in l_true:
+        if "percentel_for_nodes" in d and d["percentel_for_nodes"]:
             k = self.get_k(d["percentel_for_nodes_k"]) if "percentel_for_nodes_k" in d else 200
             self.statistic_percentel_for_nodes = StatisticPercentelForNodes(k)
             func_for_process.append(self.statistic_percentel_for_nodes.process)
+        self.func_for_process = func_for_process
 
-        def process_stat(stat : dict[tuple[int, int], float]) -> None:
-            for func in func_for_process:
-                func(stat)
 
-        self.__process_statistic = process_stat
+        self.__process_statistic = self.process_stat
+
+    def process_stat(self, stat: dict[tuple[int, int], float]) -> None:
+        for func in self.func_for_process:
+            func(stat)
+
+    def __add__(self, other_stat):
+        self.mean_statistic.n += other_stat.mean_statistic.n
+        self.mean_statistic.s += other_stat.mean_statistic.s
+        self.statistic_percentel.sketch.merge(other_stat.statistic_percentel.sketch)
+
+        for key in self.statistic_means_for_nodes.d_means_sum:
+            if key not in other_stat.statistic_means_for_nodes.d_means_sum:
+                raise Exception('не могу смёржить статистики')
+
+            self.statistic_means_for_nodes.d_means_sum[key] += other_stat.statistic_means_for_nodes.d_means_sum[key]
+
+        for key in self.statistic_means_for_nodes.d_means_count:
+            if key not in other_stat.statistic_means_for_nodes.d_means_count:
+                raise Exception('не могу смёржить статистики')
+            self.statistic_means_for_nodes.d_means_count[key] += other_stat.statistic_means_for_nodes.d_means_count[key]
+        return self
+
 
 if __name__ == "__main__":
     d = {

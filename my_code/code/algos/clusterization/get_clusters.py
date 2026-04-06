@@ -1,14 +1,9 @@
-﻿from math import degrees
-
-from my_code.code.algos.clusterization.ResultClusterization import ResultClusterization
+﻿from my_code.code.algos.clusterization.ResultClusterization import ResultClusterization
 from my_code.code.algos.clusterization.dijstra_from_many_sourses import get_big_tree
 from my_code.code.algos.clusterization.get_best_center import get_best_cluster
-from my_code.code.algos.dijkstra_transport import DijkstraWithTransport
 from my_code.code.algos.h3_helper.h3_index import get_h3_resolution_for_current_size, H3Index
 from my_code.code.getter_city_data.getter_nk_graph import nx_to_nk_with_extra
 from my_code.code.utilite import read_graphml, getter_neighbors
-import networkit as nk
-import networkit.distance
 
 
 def get_clusters(part_path_input : str, size_d : float, have_clusters = True) -> ResultClusterization:

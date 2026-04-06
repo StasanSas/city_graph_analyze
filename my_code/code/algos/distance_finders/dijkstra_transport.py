@@ -11,7 +11,7 @@ from my_code.code.utilite import getter_neighbors, time_to_seconds
 
 
 class DijkstraWithTransport():
-    def __init__(self, g : nk.Graph, start_time : float, transport_routes : TransportRoutes = TransportRoutes([])):
+    def __init__(self, g : nk.Graph, start_time : float, transport_routes : TransportRoutes):
         # g ПЕШЕХОДНЫЙ граф с рёбрами, содержащими информацию о ВРЕМЕНИ движения между вершинами
         # start_time время отправления пешехода из своей начальной точки
         # можно было добавить как аргумент в run, но мы делаем на основе этого времени предобработку transportRoutes
@@ -66,7 +66,7 @@ class DijkstraWithTransport():
 #                8
 #
 if __name__ == "__main__":
-    path = 'test.graphml'
+    path = '../test.graphml'
     nx_graph = nx.read_graphml(path)
     graph_nk = nx_to_nk(nx_graph)
 

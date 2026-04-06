@@ -158,6 +158,9 @@ def haversine(point_a, point_b):
     distance = R * c
     return distance * 1000
 
+def identity_func(x: float) -> float:
+    return x
+
 def read_graphml(part_path : str) -> nx.Graph:
     path = os.path.join("../city_pedestrian_graph", part_path)
     print(os.path.abspath(path))
