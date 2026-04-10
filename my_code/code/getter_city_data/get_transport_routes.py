@@ -4,15 +4,25 @@ from datetime import datetime, timedelta, time
 from my_code.code.algos.transport_routes.transport_routes import TransportRoute, DataArrival
 from my_code.code.utilite import get_time_in_min, get_time_in_sec
 
-
+DEFAULT_DURATION = 60 * 60 * 24
 def parse_tuple(tup : str) -> (float, float):
     s_time_str, e_time_str = tup.split(',')
     time_s = get_time_in_sec(s_time_str)
     time_e = get_time_in_sec(e_time_str)
     return time_s, time_e
 
+def get_smaller_and_normalized_data_time_arrival(d_old : dict[DataArrival, DataArrival], start : float = 0.0, duration : float = DEFAULT_DURATION) -> dict[DataArrival, DataArrival]:
+    end = start + duration
+    d_new = {}
+    for s, e in d_old.items():
+        if start <= s.arrival_time <= end:
+            new_s = DataArrival(s.id_node, s.arrival_time - start)
+            new_e = DataArrival(e.id_node, e.arrival_time - start)
+            d_new[new_s] = new_e
+    return d_new
 
-def get_transport_routes(name_city) -> list[TransportRoute]:
+
+def get_transport_routes(name_city, start_time = 0.0, duration = DEFAULT_DURATION) -> list[TransportRoute]:
     dir = f'../transport/result/{name_city}'
     if not os.path.exists(dir):
         raise Exception(f'{dir} не существует. Необходимо сделать загрузку')
@@ -33,6 +43,7 @@ def get_transport_routes(name_city) -> list[TransportRoute]:
                     s = DataArrival(start_id, date_time_s)
                     e = DataArrival(stop_id, date_time_e)
                     d[s] = e
-        route = TransportRoute(i, route_name, d)
+        smaller_d = get_smaller_and_normalized_data_time_arrival(d, start_time, duration)
+        route = TransportRoute(i, route_name, smaller_d)
         r.append(route)
     return r

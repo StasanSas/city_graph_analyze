@@ -5,6 +5,7 @@ import re
 import time
 from datetime import time
 from pathlib import Path
+from typing import Callable, Iterator
 
 import requests
 from selenium.webdriver.common.by import By
@@ -25,6 +26,7 @@ from old_code.Modes.DefaultMode import DefaultMode
 from old_code.Modes.PublicTransportMode import PublicTransportMode
 from old_code.Modes.ScooterMode import ScooterMode
 from old_code.Modes.WalkMode import WalkMode
+import networkit as nk
 
 is_init_d = False
 cash_coordinates = {} #('name_city', 'name_route') : (AnswerStop)
@@ -155,6 +157,9 @@ def haversine(point_a, point_b):
 
     distance = R * c
     return distance * 1000
+
+def identity_func(x: float) -> float:
+    return x
 
 def read_graphml(part_path : str) -> nx.Graph:
     path = os.path.join("../city_pedestrian_graph", part_path)
@@ -378,6 +383,10 @@ def get_time(name_city, name_route):
     if (name_city, name_route) not in cash_time_l:
         return None
     return cash_time_l[(name_city, name_route)]
+
+def getter_neighbors(graph : nk.Graph) -> Callable[[int], Iterator[tuple[int, float]]]:
+    return lambda i : graph.iterNeighborsWeights(i)
+
 
 
 

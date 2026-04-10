@@ -2,7 +2,7 @@ import os
 
 import networkx as nx
 
-from my_code.code.cleaning.cleaner_one_connected_component import ConverterConnectedComponents
+from my_code.code.convertors_graph.cleaner_one_connected_component import ConverterConnectedComponents
 from my_code.code.exper.visualize import find_and_visualize_area
 from my_code.code.getter_city_data.getter_nk_graph import nx_to_nk_with_extra, nk_to_nx
 
