@@ -8,13 +8,14 @@ from my_code.code.utilite import read_graphml
 
 #main()
 
-path_input = "Moscow.graphml"
-path_output = "one_component/Moscow.graphml"
+city = "Ekaterinburg"
+path_input = f"{city}.graphml"
+path_output = f"one_component/{city}.graphml"
 cleaner = ConverterConnectedComponents()
 cleaner.run(path_input, path_output)
 
-path_input = "one_component/Moscow.graphml"
-path_output = "one_component__and__without_2_chains/Moscow.graphml"
+path_input = f"one_component/{city}.graphml"
+path_output = f"one_component__and__without_2_chains/{city}.graphml"
 cleaner = Converter2Chains()
 
 cleaner.run(path_input, path_output)

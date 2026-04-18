@@ -50,13 +50,16 @@ def compare_nx_graphs(G1: nx.Graph, G2: nx.Graph, check_attributes: bool = True)
 
 path_input = "Kostroma.graphml"
 path_output = "one_component/Kostroma.graphml"
-cleaner = ConverterConnectedComponents()
+#cleaner = ConverterConnectedComponents()
 
-cleaner.run(path_input, path_output)
+#cleaner.run(path_input, path_output)
 
 #graph = nx.read_graphml("../city_cleaned_graphs/" + path_output)
 #graph = nx.read_graphml("C:\\Users\\stanislav.ivanov\\Desktop\\city_graph_analyze\\my_code\\city_pedestrian_graph\\Kostroma.graphml")
 
+import pybind11
+print(pybind11.__file__)
+# Вывод: C:\...\site-packages\pybind11\__init__.py
 
 print(3)
 

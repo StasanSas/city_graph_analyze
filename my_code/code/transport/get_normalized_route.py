@@ -53,7 +53,7 @@ def get_new_times_for_not_correct_stops(indexes_correct : np.ndarray, not_correc
         correct_index, sign_text = get_index_nearest_correct_stop(indexes_correct, not_correct_index)
         distance = get_final_distance_between_stops(correct_index, not_correct_index, stop_times, dict_distance)
         time_delta =  (distance / speed) if sign_text == 'found_smaller' else - (distance / speed)
-        new_time = list(stop_times_matrix[not_correct_index, :] + time_delta)
+        new_time = list(stop_times_matrix[correct_index, :] + time_delta)
         time_str = list(map(get_str_time, new_time))
         stop_times[not_correct_index].time = time_str
     return stop_times
@@ -86,6 +86,12 @@ def matrix_stop_times_norm(stop_times : list[StopTime]) -> np.ndarray:
     result = []
     for stop_time in stop_times:
         np_array = np.array(list(map(get_time_in_min, stop_time.time)))
+
+        for i in range(1, len(np_array)):
+            if np_array[i] < np_array[i - 1]:
+                # Если текущее время меньше предыдущего, добавляем 24*60 минут
+                np_array[i:] += 24 * 60
+
         result.append(np_array)
     stop_times = np.array(result)
     return stop_times
@@ -135,7 +141,7 @@ def get_final_distance_between_stops(index_1, index_2, stop_times : list[StopTim
     max_index = max(index_1, index_2)
     need_times = stop_times[min_index:max_index+1]
     distance = 0
-    for stop_time_start, stop_time_end in zip(need_times[:-2], need_times[1:]):
+    for stop_time_start, stop_time_end in zip(need_times[:-1], need_times[1:]):
         distance += dict_distance[(norm(stop_time_start.stop_name), norm(stop_time_end.stop_name))]
     return distance
 

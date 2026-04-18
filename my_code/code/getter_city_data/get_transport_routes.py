@@ -2,7 +2,7 @@
 from datetime import datetime, timedelta, time
 
 from my_code.code.algos.transport_routes.transport_routes import TransportRoute, DataArrival
-from my_code.code.utilite import get_time_in_min, get_time_in_sec
+from my_code.code.utilite import get_time_in_min, get_time_in_sec, delete_empty_files
 
 DEFAULT_DURATION = 60 * 60 * 24
 def parse_tuple(tup : str) -> (float, float):
@@ -26,6 +26,7 @@ def get_transport_routes(name_city, start_time = 0.0, duration = DEFAULT_DURATIO
     dir = f'../transport/result/{name_city}'
     if not os.path.exists(dir):
         raise Exception(f'{dir} не существует. Необходимо сделать загрузку')
+    delete_empty_files(dir)
     r = []
     for i, filename_route in enumerate(os.listdir(dir)):
         dir_route_path = os.path.join(dir, filename_route)

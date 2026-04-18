@@ -36,7 +36,7 @@ driver = None
 
 _INVALID_CHARS = re.compile(r'[\\/*?:"<>|]')
 def safe_str(s: str) -> str:
-    return _INVALID_CHARS.sub(' ', s).replace("–", "-").replace("—", "-")
+    return _INVALID_CHARS.sub(' ', s).replace("–", "-").replace("—", "-").replace("\\", "_")
 
 def norm(s : str) -> str:
     return s.title().replace(" ", "").replace("–", "-").replace("—", "-")
@@ -372,14 +372,14 @@ def init_d():
     return cash_coordinates, cash_time
 
 def get_coordinates(name_city, name_route):
-    cash_coordinates_l, _ = init_d()
+    cash_coordinates_l, _ = {}, None #init_d()
     if (name_city, name_route) not in cash_coordinates_l:
         return None
     return cash_coordinates_l[(name_city, name_route)]
 
 
 def get_time(name_city, name_route):
-    _, cash_time_l = init_d()
+    _, cash_time_l = None, {} #init_d()
     if (name_city, name_route) not in cash_time_l:
         return None
     return cash_time_l[(name_city, name_route)]

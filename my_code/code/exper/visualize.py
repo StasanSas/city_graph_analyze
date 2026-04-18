@@ -1,7 +1,9 @@
+import json
 import math
 import os
 
 import folium
+import networkx as nx
 
 from my_code.code.algos.clusterization.Cluster import Cluster
 
@@ -81,7 +83,94 @@ def visualize_graph_on_map(graph,
 
         print("edges:", edge_count)
 
+    nodes_js = []
+
+    for node, lat, lon in nodes_in_square:
+        nodes_js.append({
+            "id": str(node),
+            "lat": lat,
+            "lon": lon
+        })
+
+    nodes_json = json.dumps(nodes_js)
+
+    from folium import Element
+    map_name = m.get_name()
+
+    js_code = f"""
+    function initNearestNodeHandler() {{
+
+        var map = {map_name};
+        var nodes = {nodes_json};
+        var markers = [];
+
+        function distance(lat1, lon1, lat2, lon2) {{
+            return Math.sqrt(
+                Math.pow(lat1 - lat2, 2) +
+                Math.pow(lon1 - lon2, 2)
+            );
+        }}
+
+        function collectMarkers() {{
+            map.eachLayer(function(layer) {{
+                if (layer instanceof L.CircleMarker) {{
+                    markers.push(layer);
+                }}
+            }});
+        }}
+
+        map.on('click', function(e) {{
+
+            var clickLat = e.latlng.lat;
+            var clickLon = e.latlng.lng;
+
+            var minDist = Infinity;
+            var closestNode = null;
+            var closestIndex = -1;
+
+            for (var i = 0; i < nodes.length; i++) {{
+                var d = distance(
+                    clickLat, clickLon,
+                    nodes[i].lat, nodes[i].lon
+                );
+
+                if (d < minDist) {{
+                    minDist = d;
+                    closestNode = nodes[i];
+                    closestIndex = i;
+                }}
+            }}
+
+            if (!closestNode) return;
+
+            // сброс радиусов
+            markers.forEach(function(m) {{
+                m.setRadius(2);
+            }});
+
+            // выделение ближайшего
+            if (markers[closestIndex]) {{
+                markers[closestIndex].setRadius(8);
+            }}
+
+            // popup
+            L.popup()
+                .setLatLng(e.latlng)
+                .setContent("Nearest node ID: " + closestNode.id)
+                .openOn(map);
+
+        }});
+
+        collectMarkers();
+    }}
+
+    // Ждём, пока folium создаст карту
+    setTimeout(initNearestNodeHandler, 1000);
+    """
+
+    m.get_root().script.add_child(Element(js_code))
     m.save(output_file)
+
 
     print("saved:", output_file)
 
@@ -200,12 +289,8 @@ def main():
     start_ref = (55.63265, 37.65817)
     end_ref = (55.8468, 37.44116)
     mode = 'walk'
-    file = '../../city_graphs/Ekaterinburg_graph.osm.pbf'
-
-    handler = OSMHandler(start_ref, end_ref, mode=mode, file=file)
-    g = handler.graph.get_graph()
-
-    print(f"Загружен граф: {g.number_of_nodes()} узлов, {g.number_of_edges()} рёбер")
+    file = 'C:/Users/stanislav.ivanov/Desktop/city_graph_analyze/my_code/city_cleaned_graphs/one_component__and__without_2_chains/Ekaterinburg.graphml'
+    g = nx.read_graphml(file)
 
     # Вариант 1: Задать квадрат вручную
     # Центр Екатеринбурга примерно: 56.8380, 60.5973
@@ -223,14 +308,12 @@ def main():
     # Вариант 2: Найти область вокруг точки
     area_file = find_and_visualize_area(
         graph=g,
-        center_lat=56.8380,  # Центр Екатеринбурга
-        center_lon=60.5973,
-        radius_km=0.8  # 2 км радиус
+        center_lat=56.88847736123229,  # Центр Екатеринбурга
+        center_lon=60.613608756368535,
+        radius_km=1.5  # 2 км радиус
     )
 
     print("\nДля открытия визуализации:")
-    print(f"1. Откройте файл: {os.path.abspath(area_file)}")
-    print(f"2. Или откройте файл: square_info.html")
 
 
 if __name__ == "__main__":
