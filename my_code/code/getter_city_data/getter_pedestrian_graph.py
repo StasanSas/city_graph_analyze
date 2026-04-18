@@ -58,7 +58,7 @@ def save_clear_graph(input_dir, output_dir, file):
 
     name = file.split("_")[0]
     out_path = os.path.join(output_dir, name + ".graphml")
-
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
     nx.write_graphml(
         graph,
         out_path,
