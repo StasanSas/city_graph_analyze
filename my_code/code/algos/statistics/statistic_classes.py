@@ -6,14 +6,21 @@ from datasketches import kll_floats_sketch
 from marshmallow.fields import Boolean
 from math import log
 
+def func_log(_0: int, _1: int, x: float) -> float:
+    return log(x)
+
+def func_identity(_0: int, _1: int, x: float) -> float:
+    return x
+
+
 def get_func(d: dict[str, str]) -> Callable[[int, int, float], float]:
     d_func = {
-        "func_log" : lambda _0, _1, x : log(x)
+        "func_log": func_log
     }
     for k, v in d_func.items():
         if k in d and d[k].upper() == "TRUE":
             return v
-    return lambda _0, _1, x: x
+    return func_identity
 
 def get_int(string: str, d: dict[str, str]):
     try:
@@ -47,7 +54,7 @@ class StatisticMean(StatisticAbstract):
         return self.s / self.n
 
 
-class StatisticPercentel(StatisticAbstract):
+class StatisticPercentile(StatisticAbstract):
     s : int
     e : int
     step : int
@@ -55,9 +62,9 @@ class StatisticPercentel(StatisticAbstract):
     n : int
 
     def __init__(self, d : dict[str, str]):
-        self.s = get_int("percentel_s", d)
-        self.e = get_int("percentel_e", d)
-        self.step = get_int("percentel_step", d)
+        self.s = get_int("percentile_s", d)
+        self.e = get_int("percentile_e", d)
+        self.step = get_int("percentile_step", d)
         end_range = self.e + self.step if (self.e - self.s) % self.step == 0 else self.e + (2 * self.step)
         self.array = [0 for i in range(self.s - self.step, end_range, self.step)]
         self.n = 0
@@ -82,7 +89,7 @@ class StatisticPercentel(StatisticAbstract):
     def index_pos(self, rank):
         return int((self.n * rank + 1) // 1)
 
-    def get_percentel(self, rank) -> float:
+    def get_percentile(self, rank) -> float:
         target = self.index_pos(rank)
 
         mid_st = (float(self.step) / 2)
@@ -136,15 +143,15 @@ class StatisticMeansForNodes(StatisticAbstract):
         return self.d_means_sum[node_id] / self.d_means_count[node_id]
 
 
-class StatisticPercentelForNodes(StatisticAbstract):
+class StatisticPercentileForNodes(StatisticAbstract):
     d_arrays: dict[int, list[int]]
     d_n: dict[int, int]
 
 
     def __init__(self, d : dict[str, str]):
-        self.s = get_int("percentel_s", d)
-        self.e = get_int("percentel_e", d)
-        self.step = get_int("percentel_step", d)
+        self.s = get_int("percentile_s", d)
+        self.e = get_int("percentile_e", d)
+        self.step = get_int("percentile_step", d)
         self.end_range = self.e + self.step if (self.e - self.s) % self.step == 0 else self.e + (2 * self.step)
         self.len = (self.end_range - (self.s - self.step)) // self.step
         self.d_arrays = {}
@@ -174,7 +181,7 @@ class StatisticPercentelForNodes(StatisticAbstract):
                            (self.d_n[node_id] * rank) + 1
                    )// 1)
 
-    def get_percentel(self, node_id, rank) -> float:
+    def get_percentile(self, node_id, rank) -> float:
         target = self.index_pos(node_id, rank)
         array = self.d_arrays[node_id]
 
@@ -228,9 +235,9 @@ class StatisticMaxPairs(StatisticAbstract):
 
 class Statistic(StatisticAbstract):
     mean_statistic : StatisticMean
-    statistic_percentel : StatisticPercentel
+    statistic_percentile : StatisticPercentile
     statistic_means_for_nodes : StatisticMeansForNodes
-    statistic_percentel_for_nodes : StatisticPercentelForNodes
+    statistic_percentile_for_nodes : StatisticPercentileForNodes
     statistic_max_pairs : StatisticMaxPairs
 
     __process_statistic : Callable[
@@ -240,7 +247,7 @@ class Statistic(StatisticAbstract):
         None
     ]
 
-    def __init__(self, d_arguments: dict[str, Any]) -> None:
+    def __init__(self, d_arguments: dict[str, str]) -> None:
         self.__func = get_func(d_arguments)
         self.parse_arguments(d_arguments)
         pass
@@ -259,17 +266,17 @@ class Statistic(StatisticAbstract):
             self.mean_statistic = StatisticMean(d)
             func_for_process.append(self.mean_statistic.process)
 
-        if "percentel" in d and d["percentel"].upper() == "TRUE":
-            self.statistic_percentel = StatisticPercentel(d)
-            func_for_process.append(self.statistic_percentel.process)
+        if "percentile" in d and d["percentile"].upper() == "TRUE":
+            self.statistic_percentile = StatisticPercentile(d)
+            func_for_process.append(self.statistic_percentile.process)
 
         if "mean_for_nodes" in d and d["mean_for_nodes"].upper() == "TRUE":
             self.statistic_means_for_nodes = StatisticMeansForNodes()
             func_for_process.append(self.statistic_means_for_nodes.process)
 
-        if "percentel_for_nodes" in d and d["percentel_for_nodes"].upper() == "TRUE":
-            self.statistic_percentel_for_nodes = StatisticPercentelForNodes(d)
-            func_for_process.append(self.statistic_percentel_for_nodes.process)
+        if "percentile_for_nodes" in d and d["percentile_for_nodes"].upper() == "TRUE":
+            self.statistic_percentile_for_nodes = StatisticPercentileForNodes(d)
+            func_for_process.append(self.statistic_percentile_for_nodes.process)
 
         if "max_pairs" in d and d["max_pairs"].upper() == "TRUE":
             self.statistic_max_pairs = StatisticMaxPairs(d)

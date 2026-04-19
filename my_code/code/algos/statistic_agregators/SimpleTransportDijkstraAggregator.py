@@ -11,8 +11,8 @@ from my_code.code.algos.transport_routes.transport_routes import TransportRoutes
 class SimpleTransportDijkstraAggregator:
     algos : DijkstraWithTransport
 
-    def __init__(self, algos : DijkstraWithTransport, statistics : Statistic):
-        self.statistics = statistics
+    def __init__(self, algos : DijkstraWithTransport, d_arguments: dict[str, str]):
+        self.statistics = Statistic(d_arguments)
         self.algos = algos
 
 

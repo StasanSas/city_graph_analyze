@@ -3,23 +3,24 @@
 from my_code.code.algos.statistics.statistic_classes import Statistic
 
 
-def concat_statistic(statistic: list[Statistic]) -> Statistic:
+def concat_statistic(statistic: list[Statistic], d_arguments: dict[str, str]) -> Statistic:
     if len(statistic) == 0:
         raise ValueError("Дай не пустой массив")
 
     start = statistic[0]
 
     for other in statistic[1:]:
-        start = concat_pair_statistic(start, other)
+        start = concat_pair_statistic(start, other, d_arguments)
     return start
 
-def concat_pair_statistic(self : Statistic, other : Statistic) -> Statistic:
+def concat_mean_statistic(self : Statistic, other : Statistic):
     self.mean_statistic.n += other.mean_statistic.n
     self.mean_statistic.s += other.mean_statistic.s
 
-    #
-    per = self.statistic_percentel
-    per_o = other.statistic_percentel
+
+def concat_statistic_percentile(self : Statistic, other : Statistic):
+    per = self.statistic_percentile
+    per_o = other.statistic_percentile
     if per.s != per_o.s or per.e != per_o.e or per.step != per_o.step:
         raise Exception('не могу смёржить статистику по общим перцентелям')
 
@@ -27,7 +28,7 @@ def concat_pair_statistic(self : Statistic, other : Statistic) -> Statistic:
     for i in range(len(per.array)):
         per.array[i] += per_o.array[i]
 
-    #
+def concat_statistic_means_for_nodes(self : Statistic, other : Statistic):
     for key in self.statistic_means_for_nodes.d_means_sum:
         if key not in other.statistic_means_for_nodes.d_means_sum:
             raise Exception('Не могу смёржить статистики по среднему для вершин')
@@ -35,21 +36,23 @@ def concat_pair_statistic(self : Statistic, other : Statistic) -> Statistic:
         self.statistic_means_for_nodes.d_means_sum[key] += other.statistic_means_for_nodes.d_means_sum[key]
         self.statistic_means_for_nodes.d_means_count[key] += other.statistic_means_for_nodes.d_means_count[key]
 
-    #
-    all_per = self.statistic_percentel
-    all_per_o = other.statistic_percentel
+
+def concat_statistic_percentile_for_nodes(self : Statistic, other : Statistic):
+    all_per = self.statistic_percentile
+    all_per_o = other.statistic_percentile
     if all_per.s != all_per_o.s or all_per.e != all_per_o.e or all_per.step != all_per_o.step:
         raise Exception('Не могу смёржить статистику по перцентелям для вершин')
 
-    for key in self.statistic_percentel_for_nodes.d_arrays:
-        if key not in other.statistic_percentel_for_nodes.d_arrays:
+    for key in self.statistic_percentile_for_nodes.d_arrays:
+        if key not in other.statistic_percentile_for_nodes.d_arrays:
             raise Exception('Не могу смёржить статистику по перцентелям для вершин')
 
-        for i in range(len(self.statistic_percentel_for_nodes.d_arrays[key])):
-            self.statistic_percentel_for_nodes.d_arrays[key][i] += other.statistic_percentel_for_nodes.d_arrays[key][i]
-        self.statistic_percentel_for_nodes.d_n[key] += other.statistic_percentel_for_nodes.d_n[key]
+        for i in range(len(self.statistic_percentile_for_nodes.d_arrays[key])):
+            self.statistic_percentile_for_nodes.d_arrays[key][i] += other.statistic_percentile_for_nodes.d_arrays[key][i]
+        self.statistic_percentile_for_nodes.d_n[key] += other.statistic_percentile_for_nodes.d_n[key]
 
-    #
+
+def concat_statistic_max_pairs(self : Statistic, other : Statistic):
     if self.statistic_max_pairs.amount_elements != other.statistic_max_pairs.amount_elements:
         raise Exception('Нем можем склеить статистику по худшим дистанциям')
 
@@ -59,21 +62,39 @@ def concat_pair_statistic(self : Statistic, other : Statistic) -> Statistic:
         if len(self.statistic_max_pairs.heap) > self.statistic_max_pairs.amount_elements:
             heapq.heappop(self.statistic_max_pairs.heap)
 
+
+def concat_pair_statistic(self : Statistic, other : Statistic, d_arguments: dict[str, str]) -> Statistic:
+    d = d_arguments
+    if "mean" in d and d["mean"].upper() == "TRUE":
+        concat_mean_statistic(self, other)
+
+    if "percentile" in d and d["percentile"].upper() == "TRUE":
+        concat_statistic_percentile(self, other)
+
+    if "mean_for_nodes" in d and d["mean_for_nodes"].upper() == "TRUE":
+        concat_statistic_means_for_nodes(self, other)
+
+    if "percentile_for_nodes" in d and d["percentile_for_nodes"].upper() == "TRUE":
+        concat_statistic_percentile_for_nodes(self, other)
+
+    if "max_pairs" in d and d["max_pairs"].upper() == "TRUE":
+        concat_statistic_max_pairs(self, other)
+
     return self
 
 if __name__ == "__main__":
     d = {
         "mean" : "True",
 
-        "percentel" : "True",
-        "percentel_s" : "0",
-        "percentel_e": f"{100}",
-        "percentel_step": "1",
+        "percentile" : "True",
+        "percentile_s" : "0",
+        "percentile_e": f"{100}",
+        "percentile_step": "1",
 
         "mean_for_nodes" : "True",
 
-        "percentel_for_nodes" : "True",
-        "percentel_for_nodes_k" : "True",
+        "percentile_for_nodes" : "True",
+        "percentile_for_nodes_k" : "True",
         "max_pairs" : "True",
         "max_pairs_amount" : "4",
 
@@ -93,10 +114,10 @@ if __name__ == "__main__":
     s_2.process({
         (1, 1): 5, (2, 2): 10, (1, 3): 25
     })
-    s = concat_statistic([s, s_2])
+    s = concat_statistic([s, s_2], d)
     print(s.mean_statistic.get_mean())
-    print(s.statistic_percentel.get_percentel(0.5))
+    print(s.statistic_percentile.get_percentile(0.5))
     print(s.statistic_means_for_nodes.get_mean(3))
-    print(s.statistic_percentel_for_nodes.get_percentel(3, 0.5))
+    print(s.statistic_percentile_for_nodes.get_percentile(3, 0.5))
     print(s.statistic_max_pairs.get_pairs())
 
