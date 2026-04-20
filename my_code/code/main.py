@@ -14,15 +14,15 @@ from my_code.code.getter_city_data.getter_nk_graph import nx_to_nk
 from my_code.code.utilite import read_graphml
 
 if __name__ == "__main__":
-    path = "time_pedestrian_graph/Kostroma.graphml"
+    path = "time_pedestrian_graph/Ekaterinburg.graphml"
     graph = read_graphml(path)
     g_nk = nx_to_nk(graph)
 
     start_time_algos = 9 * 60 * 60
     duration = 2 * 60 * 60
-    transport_routes = TransportRoutes(get_transport_routes('Kostroma', start_time_algos, duration))
+    transport_routes = TransportRoutes(get_transport_routes('Ekaterinburg', start_time_algos, duration))
 
-    algos = DijkstraWithTransport(g_nk, start_time_algos, transport_routes)
+    algos = DijkstraWithTransport(g_nk, start_time_algos, TransportRoutes([]))
 
     d = {
         "mean": "True",
