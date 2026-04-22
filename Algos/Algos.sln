@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Algos", "Algos\Algos.csproj", "{8193C889-D0DD-42C6-A992-F9BBBE072787}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debag", "Debag\Debag.csproj", "{AC410282-AB32-42EB-8E06-9DE7C7F366B8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8193C889-D0DD-42C6-A992-F9BBBE072787}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8193C889-D0DD-42C6-A992-F9BBBE072787}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8193C889-D0DD-42C6-A992-F9BBBE072787}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8193C889-D0DD-42C6-A992-F9BBBE072787}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC410282-AB32-42EB-8E06-9DE7C7F366B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC410282-AB32-42EB-8E06-9DE7C7F366B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC410282-AB32-42EB-8E06-9DE7C7F366B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC410282-AB32-42EB-8E06-9DE7C7F366B8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
