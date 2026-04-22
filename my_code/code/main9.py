@@ -1,4 +1,8 @@
 import time
+import os
+dll_path = r"../../Algos/Algos/bin/Debug/net9.0/Algos.dll"
+#C:\Users\Acer\Desktop\city_graph_analyze\Algos\Algos\bin\Debug\net9.0\Algos.dll
+dll_path = os.path.abspath(dll_path)
 from pythonnet import load
 
 # Укажите 'coreclr' для .NET Core / .NET 5+
@@ -7,11 +11,11 @@ load("coreclr")
 import clr
 
 clr.AddReference("System")
-from System import *
+from System import Activator, Int64 # noqa ЭТО ШТУКА КОТОРУЮ НЕ НАДО УСТАНАВЛИВАТЬ
+#ОНА ПОДКЛЮЧАЕТСЯ ЧЕРЕЗ clr.AddReference("System")
 import os
 
 # Путь к вашей DLL
-dll_path = r"C:\Users\stanislav.ivanov\Desktop\city_graph_analyze\Algos\Algos\bin\Debug\net9.0\Algos.dll"
 assembly = clr.AddReference(dll_path)
 
 # Получаем тип и метод
