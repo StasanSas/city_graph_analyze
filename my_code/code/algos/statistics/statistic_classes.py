@@ -1,8 +1,6 @@
 ﻿from multiprocessing import heap
 from typing import Callable, Any, Dict
 import heapq
-import datasketches
-from datasketches import kll_floats_sketch
 from marshmallow.fields import Boolean
 from math import log
 

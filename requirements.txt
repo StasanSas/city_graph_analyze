@@ -18,3 +18,5 @@ webdriver-manager>=4.0.2
 shapely>=2.1.2
 geopy>=2.4.1
 setuptools>=82.0.1
+pybind11>=3.0.3
+branca>=0.8.2
