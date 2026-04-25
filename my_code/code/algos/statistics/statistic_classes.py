@@ -1,5 +1,5 @@
 ﻿from multiprocessing import heap
-from typing import Callable, Any
+from typing import Callable, Any, Dict
 import heapq
 import datasketches
 from datasketches import kll_floats_sketch
@@ -234,6 +234,8 @@ class StatisticMaxPairs(StatisticAbstract):
 
 
 class Statistic(StatisticAbstract):
+    config: Dict[str, str]
+
     mean_statistic : StatisticMean
     statistic_percentile : StatisticPercentile
     statistic_means_for_nodes : StatisticMeansForNodes
@@ -250,6 +252,7 @@ class Statistic(StatisticAbstract):
     def __init__(self, d_arguments: dict[str, str]) -> None:
         self.__func = get_func(d_arguments)
         self.parse_arguments(d_arguments)
+        self.config = d_arguments
         pass
 
 
